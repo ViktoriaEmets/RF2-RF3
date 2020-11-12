@@ -3,7 +3,7 @@ module test();
   
 reg clk_50MHz;                      // clk
 reg data_valid;                     // write data from ADC
-reg enable;                         // signal of permit
+reg tr_mode_enable;                 // signal of permit
 reg rst;                            // reset
 
 reg [11:0]x;                        // data from ADC
@@ -14,7 +14,7 @@ reg N_async;                        // number of pulse
 integer n;
 parameter DX=1;
 parameter       F=14;
-parameter       S=10;
+//parameter       S=10;
 
 //parameter K=1000;                   // for getting 50 KHz 
 //parameter D=1;                     // for get 1 takt pulse (50 MHz)  
@@ -45,18 +45,18 @@ end
 //---------------------------------------------------------------------------------------------------------------
 
 
-//------------------------------ ENABLE -------------------------------------------------------------------------
+//------------------------------ TR_MODE_ENABLE -------------------------------------------------------------------------
 initial
 begin
-  enable =0;
+  tr_mode_enable =0;
    //x=25;
-  #300 enable=1;
+  #300 tr_mode_enable=1;
   //for(n=1; n<10; n=n+DX)
     //begin
    // x=x-n; 
    // delay(2);
-  #500 enable=0;
-  #200 enable=1;
+  #500 tr_mode_enable=0;
+  #200 tr_mode_enable=1;
 end
 //end
 //---------------------------------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ end
 //----------------------------------- X --------------------------------------------------------------------------------
 always @(posedge clk_50MHz)
 begin
-  if (enable==0)
+  if (tr_mode_enable==0)
     begin
       x=25;
     end 
@@ -111,6 +111,6 @@ endtask
 //----------------------------------------------------------------------------------------------------------------------------
 
 
-TR TR_test(.clk (clk_50MHz), .x (x), .x0 (5), .data_valid (data_valid), .enable (enable), .rst (rst),
+TR TR_test(.clk (clk_50MHz), .x (x), .x0 (5), .data_valid (data_valid), .tr_mode_enable (tr_mode_enable), .rst (rst),
 .drv_SM (drv_SM), .drv_step (drv_step), .drv_dir(drv_dir), .dx1(5), .dx2(10));
 endmodule

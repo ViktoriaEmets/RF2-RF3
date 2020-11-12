@@ -8,7 +8,7 @@ parameter       CONST=0                   // dx->0 = dx->const
 (
 input wire      clk,                      // 50 MHz
 input wire      data_valid,               // from ADC reading data
-input wire      enable,                   // enable signal
+input wire      tr_mode_enable,           // enable signal, outsignal
 input wire      rst,                      // reset
 
 input           [WIDTH_IN-1:0]x,          // ADC
@@ -18,12 +18,9 @@ input           [WIDTH_WORK-10:0]dx2,     // position2=100
 
 output reg      drv_step=0,                // pulse for SM
 output reg      drv_dir=0,                 // direction 
-output reg      drv_SM                     // work SM
+output reg      drv_SM,                    // work SM
+output reg      drv_enable 		   // enable signal of work SM, innersignal
 );
-
-//-------------------------------------------------------------------------------------------------------------------------------
-include"TR_pulse.v"; 			
-//-------------------------------------------------------------------------------------------------------------------------------
 
 reg             [WIDTH_IN-1:0]dx;         // dx=x-x0
 reg             [WIDTH_WORK:0]N_async;    // amount of pulse
@@ -44,10 +41,11 @@ case(state)
   
   STARTING:                             // state 1 - on/off
   begin
-    if(enable==1)
+    if(tr_mode_enable==1)
       begin
         state<=TO_ZERO;     	           
         drv_SM <= 1;
+	drv_enable<=0;
       end 
     else begin
       state<=STARTING;
@@ -60,8 +58,9 @@ case(state)
       begin
         state<=LEAVING_DZ;               
         drv_SM <= 0;
+	drv_enable<=0;
       end 
-    else if (enable==0)
+    else if (tr_mode_enable==0)
           begin
             state<=STARTING;            
           end 
@@ -73,8 +72,9 @@ case(state)
         begin
             state<=TO_ZERO;             
             drv_SM <= 1;
+	    drv_enable<=1;
         end 
-     else if (enable==0)
+     else if (tr_mode_enable==0)
           begin
             state<=STARTING;            
           end   
@@ -165,7 +165,7 @@ end
 
 	  
 
-//------------------ determination of direction (MISTAKE - NOT WORK)------------------------------------------------------------	
+//------------------ determination of direction ------------------------------------------------------------	
 
 always@(posedge clk)                        // check direction 
 	    begin 
