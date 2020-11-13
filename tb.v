@@ -1,29 +1,24 @@
 `timescale 10ns/10ns
 module test();
   
-reg clk_50MHz;                      // clk
-reg data_valid;                     // write data from ADC
-reg tr_mode_enable;                 // signal of permit
-reg rst;                            // reset
+reg             clk_50MHz;                  // clk
+reg             data_valid;                 // write data from ADC
+reg             tr_mode_enable;             // signal of permit
+reg             rst;                        // reset
 
-reg [11:0]x;                        // data from ADC
-reg [9:0]counter;                   // for data_valid
-reg N_async;                        // number of pulse
+reg             data_valid_trig;
+reg             [11:0]x;                    // data from ADC
+reg             [9:0]counter;               // for data_valid
+reg             N_async;                    // number of pulse
 
+//wire            abc;
 
-integer n;
-parameter DX=1;
+integer         n;
+parameter       DX=1;
 parameter       F=20;
-//parameter       S=10;
 
-//parameter K=1000;                  // for getting 50 KHz 
-//parameter D=1;                     // for get 1 takt pulse (50 MHz)  
-
-
-wire dx1;
-wire dx2;
-//wire v1;
-//wire v2;
+wire            dx1;
+wire            dx2;
 
 //--------------------------------- CLK -------------------------------------------------------------------------
 initial
@@ -49,12 +44,7 @@ end
 initial
 begin
   tr_mode_enable =0;
-   //x=25;
   #300 tr_mode_enable=1;
-  //for(n=1; n<10; n=n+DX)
-    //begin
-   // x=x-n; 
-   // delay(2);
   #500 tr_mode_enable=0;
   #200 tr_mode_enable=1;
 end
@@ -78,11 +68,26 @@ end
 //---------------------------------------------------------------------------------------------------------------------
 
 
+//------------------------------ DATA_VALID_TRIG ----------------------------------------------------------------------
+initial
+begin
+  data_valid_trig=1;
+ forever
+  begin
+    data_valid_trig=1;
+    @(posedge clk_50MHz);
+      data_valid_trig=0;
+    repeat(4)
+    @(posedge clk_50MHz);
+      
+  end
+end
+//---------------------------------------------------------------------------------------------------------------------
+
+
 //----------------------------------- X --------------------------------------------------------------------------------
 always @(posedge data_valid)
 begin
-  //if(data_valid ==1) 
-    //begin
         if (tr_mode_enable==0)
           begin
             x=25;
@@ -108,7 +113,6 @@ begin
 
 //------------------------------------------- DELAY -----------------------------------------------------------------------
 task delay;
-
 input integer N;
 repeat (N)
 @(posedge clk_50MHz);
@@ -116,6 +120,38 @@ endtask
 //----------------------------------------------------------------------------------------------------------------------------
 
 
-TR TR_test(.clk (clk_50MHz), .x (x), .x0 (5), .data_valid (data_valid), .tr_mode_enable (tr_mode_enable), .rst (rst),
-.drv_enable_SM (drv_enable_SM), .drv_step (drv_step), .drv_dir(drv_dir), .dx1(7), .dx2(12), .pulse(pulse));
+//----------------------------------------------------------------------------------------------------------------------------
+TR TR_test
+(
+  .clk                (clk_50MHz),
+  .data_valid         (data_valid), 
+  .tr_mode_enable     (tr_mode_enable), 
+  .rst                (rst), 
+  .x                  (x), 
+  .x0                 (5),
+  .dx1                (7), 
+  .dx2                (12),  
+  .drv_enable_SM      (drv_enable_SM), 
+  .drv_step           (drv_step), 
+  .drv_dir            (drv_dir), 
+  .pulse              (pulse), 
+  .led                (led) 
+  //.outdrv_enable_SM   (abc)
+);
+//----------------------------------------------------------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------------------------------------------------------
+TR_pulse TR_pulse_test 
+(
+  .clk                (clk_50MHz), 
+  .rst                (rst), 
+  .data_valid_trig    (data_valid_trig), 
+  .drv_enable_SM      (drv_enable_SM), 
+  .N                  (N),
+  .drv_step           (drv_step) 
+  //.indrv_enable_SM    (abc)
+);
+//----------------------------------------------------------------------------------------------------------------------------
+
 endmodule
