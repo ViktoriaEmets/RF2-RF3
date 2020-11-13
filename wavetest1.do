@@ -21,7 +21,7 @@ add wave -noupdate -radix unsigned /test/drv_enable_SM
 add wave -noupdate -radix unsigned /test/drv_step
 add wave -noupdate /test/pulse
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1700 ns} 0}
+WaveRestoreCursors {{Cursor 1} {40280 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 164
 configure wave -valuecolwidth 58
@@ -37,4 +37,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {21 us}
+WaveRestoreZoom {0 ns} {52500 ns}
