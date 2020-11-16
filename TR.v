@@ -16,9 +16,9 @@ input           [WIDTH_IN-1:0]x,          // ADC
 input           [WIDTH_IN-1:0]x0,         // TABLE
 input           [WIDTH_WORK-13:0]dx1,     // posinion1=10
 input           [WIDTH_WORK-10:0]dx2,     // position2=100 
-    
-output reg      drv_step=0,                // pulse for SM
-output reg      pulse,
+
+output reg      [WIDTH_WORK:0]N, 			       // after d-trigger (write or not data)    
+output reg      drv_step,                // pulse for SM
 output reg      drv_dir=0,                 // direction 
 output reg      drv_enable_SM,             // inner signal, enable work SM
 output reg      data_valid_trig,
@@ -28,9 +28,9 @@ output reg      led
 reg             [WIDTH_IN-1:0]dx;          // dx=x-x0
 reg             [WIDTH_WORK:0]N_async;     // amount of pulse
 reg             [WIDTH_WORK:0]count=0;     // counter of pulse 
-reg 	           [WIDTH_WORK:0]N; 			       // after d-trigger (write or not data)
+
 reg             [1:0]c;                    // number sign
-reg             [10:0]K;
+//reg             [10:0]K;
 
 reg             [1:0]state=0;              // read data from ADC
 localparam      [1:0]STARTING=0;           // state 1 - on/off
@@ -122,6 +122,7 @@ always@(posedge clk)                        // check direction
   end 
 //-------------------------------------------------------------------------------------------------------------------------------
 
+
 //------------ finding N-async (number of pulse)----------------------------------------------------------------------------------------------
 always@(*)                 
 begin 
@@ -163,4 +164,5 @@ begin
 	data_valid_trig<=data_valid;
 end
 */
+
 endmodule

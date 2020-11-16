@@ -8,14 +8,13 @@ reg             rst;                        // reset
 
 reg             data_valid_trig;
 reg             [11:0]x;                    // data from ADC
-reg             [9:0]counter;               // for data_valid
-reg             N_async;                    // number of pulse
 
-//wire            abc;
+wire            abc;
+wire[11:0]            period;
 
 integer         n;
 parameter       DX=1;
-parameter       F=20;
+parameter       F=250;
 
 wire            dx1;
 wire            dx2;
@@ -90,7 +89,7 @@ always @(posedge data_valid)
 begin
         if (tr_mode_enable==0)
           begin
-            x=25;
+            x=100;
           end 
    
         else 
@@ -113,8 +112,8 @@ begin
 
 //------------------------------------------- DELAY -----------------------------------------------------------------------
 task delay;
-input integer N;
-repeat (N)
+input integer T;
+repeat (T)
 @(posedge clk_50MHz);
 endtask
 //----------------------------------------------------------------------------------------------------------------------------
@@ -128,15 +127,14 @@ TR TR_test
   .tr_mode_enable     (tr_mode_enable), 
   .rst                (rst), 
   .x                  (x), 
-  .x0                 (5),
-  .dx1                (7), 
-  .dx2                (12),  
-  .drv_enable_SM      (drv_enable_SM), 
+  .x0                 (10),
+  .dx1                (17), 
+  .dx2                (32),  
   .drv_step           (drv_step), 
-  .drv_dir            (drv_dir), 
-  .pulse              (pulse), 
-  .led                (led) 
-  //.outdrv_enable_SM   (abc)
+  .drv_dir            (drv_dir),  
+  .led                (led), 
+  .drv_enable_SM      (abc),
+  .N      	           (period)
 );
 //----------------------------------------------------------------------------------------------------------------------------
 
@@ -147,10 +145,9 @@ TR_pulse TR_pulse_test
   .clk                (clk_50MHz), 
   .rst                (rst), 
   .data_valid_trig    (data_valid_trig), 
-  .drv_enable_SM      (drv_enable_SM), 
-  .N                  (N),
-  .drv_step           (drv_step) 
-  //.indrv_enable_SM    (abc)
+  .drv_step           (drv_step),
+  .in_drv_enable_SM   (abc),
+  .N     	            (period)
 );
 //----------------------------------------------------------------------------------------------------------------------------
 
