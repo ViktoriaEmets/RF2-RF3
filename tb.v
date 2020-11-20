@@ -14,7 +14,7 @@ wire[11:0]            period;
 
 integer         n;
 parameter       DX=1;
-parameter       F=250;
+parameter       F=150;
 
 wire            dx1;
 wire            dx2;
@@ -128,8 +128,8 @@ TR TR_test
   .rst                (rst), 
   .x                  (x), 
   .x0                 (10),
-  .dx1                (17), 
-  .dx2                (32),  
+  .dx1                (55), 
+  .dx2                (92),  
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
   .led                (led), 
