@@ -10,11 +10,17 @@ reg             data_valid_trig;
 reg             [11:0]x;                    // data from ADC
 
 wire            abc;
-wire[11:0]            period;
+wire[16:0]      period;
 
 integer         n;
 parameter       DX=1;
+<<<<<<< .mine
+parameter       F=40;
+||||||| .r33
+parameter       F=250;
+=======
 parameter       F=150;
+>>>>>>> .r35
 
 wire            dx1;
 wire            dx2;
@@ -34,7 +40,7 @@ initial
 begin
   rst =0;
   #510 rst=1;
-  #100 rst=0;
+  #300 rst=0;
 end
 //---------------------------------------------------------------------------------------------------------------
 
@@ -89,7 +95,7 @@ always @(posedge data_valid)
 begin
         if (tr_mode_enable==0)
           begin
-            x=100;
+            x=50;
           end 
    
         else 
@@ -128,11 +134,19 @@ TR TR_test
   .rst                (rst), 
   .x                  (x), 
   .x0                 (10),
+<<<<<<< .mine
+  .dx1                (45), 
+  .dx2                (60),  
+||||||| .r33
+  .dx1                (17), 
+  .dx2                (32),  
+=======
   .dx1                (55), 
   .dx2                (92),  
+>>>>>>> .r35
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
-  .led                (led), 
+  //.led                (led), 
   .drv_enable_SM      (abc),
   .N      	           (period)
 );
