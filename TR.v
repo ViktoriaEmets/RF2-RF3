@@ -21,8 +21,8 @@ output reg      [WIDTH_WORK:0]N, 			       // after d-trigger (write or not data
 output reg      drv_step,                // pulse for SM
 output reg      drv_dir=0,                 // direction 
 output reg      drv_enable_SM,             // inner signal, enable work SM
-output reg      data_valid_trig,
-output reg      led
+output reg      data_valid_trig
+//output reg      led
 );
 
 reg             [WIDTH_IN-1:0]dx;          // dx=x-x0
