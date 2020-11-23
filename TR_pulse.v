@@ -8,22 +8,28 @@ module TR_pulse
     input wire      data_valid_trig,           // from ADC reading data(this signal has a delay 20 ns)
     
     input           in_drv_enable_SM,             // work SM
-    input           [SIZE-1:0] N,
+    input           [SIZE-1:0]N,
     
     output reg      drv_step                   // pulse for SM
     
   );
   
     reg             [16:0]drv_count;         // counter of pulse
-    reg             [16:0]n;
-  
+    reg             [16:0]number;
+    
+    
+//-------------------------- number for counter -----------------------------------------------------------------------------------  
 always@(posedge clk)
   begin
   if(data_valid_trig)
     begin
-      n<=N;
+      number<=N;
     end
   end  
+//-------------------------------------------------------------------------------------------------------------------------------  
+  
+  
+  
 //--------------------	counter of pulse -----------------------------------------------------------------------------------------
 always@(posedge clk)
 begin
@@ -35,40 +41,21 @@ begin
     
   else if (in_drv_enable_SM==1) //enable signal of work SM
     begin
-      	if (drv_count<=n+1)
+      	if (drv_count<=number+1)
 	       begin
 		        drv_count<=drv_count+1;
 		        drv_step<=drv_step+1;
-		       //drv_count=0;
-		        //drv_step=0;
+		      
 	       end 
       else 
 	       begin
 		        drv_count<=0;
 		        drv_step<=0;
-		        //drv_count=drv_count-1;
-		        //drv_step=drv_step-1;
+		       
 		     end
 		 end
-	/*else begin
-	      data_valid_trig;
-	      drv_step=0;
-	     end  	 
-	     */    
 end
 //------------------------------------------------------------------------------------------------------------------------------	 
 
-/*always@(posedge clk)
-begin
-if (data_valid_trig==1)
-  begin
-    n=N;
-  end 
-  	if (drv_count<=n)
-  	begin 
-  	 drv_count=drv_count+1; 
-   end
- end
- */
    
 endmodule
