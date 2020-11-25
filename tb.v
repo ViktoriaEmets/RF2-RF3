@@ -7,14 +7,14 @@ reg             tr_mode_enable;             // signal of permit
 reg             rst;                        // reset
 
 reg             data_valid_trig;
-reg             [11:0]x;                    // data from ADC
+reg             [15:0]x;                    // data from ADC
 
 wire            abc;
 wire[16:0]      period;
 
 integer         n;
 parameter       DX=1;
-parameter       F=100;
+parameter       F=1000;
 
 
 wire            dx1;
@@ -90,7 +90,7 @@ always @(posedge data_valid)
 begin
         if (tr_mode_enable==0)
           begin
-            x=11000;
+            x=15000;
           end 
    
         else 
@@ -129,8 +129,8 @@ TR TR_test
   .rst                (rst), 
   .x                  (x), 
   .x0                 (10),
-  .dx1                (150), 
-  .dx2                (1500),  
+  .dx1                (750), 
+  .dx2                (2000),  
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
   .drv_enable_SM      (abc),

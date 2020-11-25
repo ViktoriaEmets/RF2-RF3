@@ -12,7 +12,7 @@ input wire      data_valid,               // from ADC reading data
 input wire      tr_mode_enable,           // enable signal, outsignal
 input wire      rst,                      // reset
 
-input           [WIDTH_IN-1:0]x,          // ADC
+input           [WIDTH_WORK-1:0]x,          // ADC
 input           [WIDTH_IN-1:0]x0,         // TABLE
 input           [WIDTH_WORK-13:0]dx1,     // posinion1=10
 input           [WIDTH_WORK-10:0]dx2,     // position2=100 
@@ -25,7 +25,7 @@ output reg      data_valid_trig
 //output reg      led
 );
 
-reg             [WIDTH_IN-1:0]dx;          // dx=x-x0
+reg             [WIDTH_WORK:0]dx;          // dx=x-x0
 reg             [WIDTH_WORK:0]N_async;     // amount of pulse
 reg             [WIDTH_WORK:0]count=0;     // counter of pulse 
 
