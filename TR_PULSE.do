@@ -6,21 +6,6 @@ quietly virtual function -install /test -env /test { (2)} virtual_000003
 quietly virtual function -install /test -env /test { (2)} virtual_000004
 quietly virtual function -install /test -env /test { (2)} virtual_000005
 quietly WaveActivateNextPane {} 0
-<<<<<<< .mine
-add wave -noupdate -radix unsigned /test/TR_pulse_test/clk
-add wave -noupdate -radix unsigned /test/TR_pulse_test/rst
-add wave -noupdate -radix unsigned /test/TR_pulse_test/data_valid_trig
-add wave -noupdate -radix unsigned /test/TR_pulse_test/in_drv_enable_SM
-add wave -noupdate -format Analog-Step -height 74 -max 43.0 -radix unsigned /test/TR_pulse_test/drv_count
-add wave -noupdate -format Analog-Step -height 74 -max 80000.0 -radix unsigned /test/TR_pulse_test/N
-||||||| .r38
-add wave -noupdate -radix unsigned /test/TR_pulse_test/clk
-add wave -noupdate -radix unsigned /test/TR_pulse_test/rst
-add wave -noupdate -radix unsigned /test/TR_pulse_test/data_valid_trig
-add wave -noupdate -radix unsigned /test/TR_pulse_test/in_drv_enable_SM
-add wave -noupdate -format Analog-Step -height 74 -max 1172.0 -radix unsigned /test/TR_pulse_test/drv_count
-add wave -noupdate -format Analog-Step -height 74 -max 2736.0 -radix unsigned /test/TR_pulse_test/N
-=======
 add wave -noupdate /test/TR_pulse_test/clk
 add wave -noupdate /test/TR_pulse_test/rst
 add wave -noupdate /test/TR_pulse_test/data_valid_trig
@@ -28,7 +13,6 @@ add wave -noupdate /test/TR_pulse_test/in_drv_enable_SM
 add wave -noupdate -format Analog-Step -height 74 -max 39600.0 -radix unsigned /test/TR_pulse_test/N
 add wave -noupdate -format Analog-Step -height 74 -max 39600.0 -radix unsigned /test/TR_pulse_test/number
 add wave -noupdate -format Analog-Step -height 74 -max 14469.0 -radix unsigned /test/TR_pulse_test/drv_count
->>>>>>> .r41
 add wave -noupdate -radix unsigned /test/TR_pulse_test/drv_step
 add wave -noupdate -format Analog-Step -height 74 -max 2798.0 -radix unsigned /test/TR_test/dx
 TreeUpdate [SetDefaultTree]
@@ -48,10 +32,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-<<<<<<< .mine
-WaveRestoreZoom {0 ns} {52500 ns}
-||||||| .r38
-WaveRestoreZoom {0 ns} {262500 ns}
-=======
 WaveRestoreZoom {2477500 ns} {3527500 ns}
->>>>>>> .r41

@@ -14,7 +14,7 @@ wire[16:0]      period;
 
 integer         n;
 parameter       DX=1;
-parameter       F=1000;
+parameter       F=1500;
 
 
 wire            dx1;
@@ -90,7 +90,7 @@ always @(posedge data_valid)
 begin
         if (tr_mode_enable==0)
           begin
-            x=15000;
+            x=2500;
           end 
    
         else 
@@ -129,8 +129,8 @@ TR TR_test
   .rst                (rst), 
   .x                  (x), 
   .x0                 (10),
-  .dx1                (750), 
-  .dx2                (2000),  
+  .dx1                (850), 
+  .dx2                (1300),  
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
   .drv_enable_SM      (abc),

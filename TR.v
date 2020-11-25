@@ -2,9 +2,9 @@ module TR
 #(
 parameter       WIDTH_IN=12,              // x,x0,dx
 parameter       WIDTH_WORK=16,            // dx1,dx2,v1,v2,v,N,count 
-parameter       DEADZONE=9,               // stepmotor does not react, dx in DEAD ZONE
+parameter       DEADZONE=500,             // stepmotor does not react, dx in DEAD ZONE
 parameter       CONST=0                   // dx->0 = dx->const
-//parameter       K=10                   // for getting 50 KHz 
+//parameter       K=10                    // for getting 50 KHz 
 )
 (
 input wire      clk,                      // 50 MHz
@@ -12,16 +12,16 @@ input wire      data_valid,               // from ADC reading data
 input wire      tr_mode_enable,           // enable signal, outsignal
 input wire      rst,                      // reset
 
-input           [WIDTH_WORK-1:0]x,          // ADC
+input           [WIDTH_WORK-1:0]x,        // ADC
 input           [WIDTH_IN-1:0]x0,         // TABLE
 input           [WIDTH_WORK-13:0]dx1,     // posinion1=10
 input           [WIDTH_WORK-10:0]dx2,     // position2=100 
 
 output reg      [WIDTH_WORK:0]N, 			       // after d-trigger (write or not data)    
-output reg      drv_step,                // pulse for SM
+output reg      drv_step,                  // pulse for SM
 output reg      drv_dir=0,                 // direction 
-output reg      drv_enable_SM,             // inner signal, enable work SM
-output reg      data_valid_trig
+output reg      drv_enable_SM             // inner signal, enable work SM
+//output reg      data_valid_trig
 //output reg      led
 );
 
@@ -138,7 +138,7 @@ begin
 				//v=27;
 			end
 			
-	 else if ((0<dx) && (dx<dx1))
+	 else if ((DEADZONE<dx) && (dx<dx1))
 			begin                                // 0<dx<10
 				N_async=80000;
 				//v=6;
