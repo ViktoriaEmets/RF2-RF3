@@ -8,10 +8,10 @@ module TR_pulse
     input wire      data_valid_trig,           // from ADC reading data(this signal has a delay 20 ns)
     
     input           in_drv_enable_SM,          // work SM
-    input           [SIZE:0]N,               // period for filling with pulse
+    input           [SIZE:0]N,                 // period for filling with pulse
     
-    output reg      drv_step                   // pulse for SM
-    
+    output reg      drv_step,                  // pulse for SM
+    output reg      drv_pulse
   );
   
     reg             [16:0]drv_count;           // counter of pulse
@@ -55,6 +55,14 @@ begin
 end
 //------------------------------------------------------------------------------------------------------------------------------	 
 
+
+always@(posedge clk)
+  begin
+  if(drv_step==1)
+    begin
+        drv_pulse<=1;                            // assign value to number
+    end
+  end  
 
 
    
