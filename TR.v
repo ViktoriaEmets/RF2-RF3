@@ -16,8 +16,10 @@ input           [WIDTH_WORK:0]x,        // ADC
 input           [WIDTH_IN-1:0]x0,         // TABLE
 input           [WIDTH_WORK:0]dx1,     // posinion1=10
 input           [16:0]dx2,     // position2=100 
+input     	     [WIDTH_WORK:0]F1,
+input     	     [2*WIDTH_WORK:0]F2,k,F0,
 
-output reg      [16:0]N, 			       // after d-trigger (write or not data)    
+output reg      [16:0]N,COUNTER, 			       // after d-trigger (write or not data)    
 output reg      drv_step,                  // pulse for SM
 output reg      drv_dir,                   // direction 
 output reg      drv_enable_SM              // inner signal, enable work SM
@@ -29,8 +31,8 @@ reg             [WIDTH_WORK:0]dx;          // dx=x-x0
 reg             [16:0]N_async;     // amount of pulse
 reg             [WIDTH_WORK:0]count=0;     // counter of pulse 
 
-reg             [1:0]c;                    // number sign
-//reg             [10:0]K;
+reg             [1:0]c;                    
+//reg             [16:0]F0;
 
 reg             [1:0]state=0;              // read data from ADC
 localparam      [1:0]STARTING=0;           // state 1 - on/off
@@ -125,6 +127,30 @@ always@(posedge clk)                        // check direction
 
 //------------ finding N-async (number of pulse)----------------------------------------------------------------------------------------------
 always@(*)                 
+begin  // check position of dx
+		
+		 if( (dx1<=dx) && (dx<dx2))
+			begin                              
+				N_async<=k*dx+F0;
+				
+			end
+			
+		
+		else	if (dx>=dx2)                          
+		begin                                  // dx>=100
+				N_async<=F2;
+				
+			end
+			
+	 else if ((DEADZONE<dx) && (dx<dx1))
+			begin                                // 0<dx<10
+				N_async<=F1;
+				
+			end				
+end
+
+/*
+	always@(*)                 
 begin 
 		if (dx>=dx2)                           // check position of dx
 		begin                                  // dx>=100
@@ -143,8 +169,7 @@ begin
 				N_async=80000;
 				//v=6;
 			end				
-end
-	
+end*/
 //--------------------------- d-trigger for N (needed period)---------------------------------------------------------------------------------------
 always@(posedge data_valid or posedge rst) //cheak a condition
 begin

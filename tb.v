@@ -7,7 +7,7 @@ reg             tr_mode_enable;             // signal of permit
 reg             rst;                        // reset
 
 reg             data_valid_trig;
-reg             [16:0]x;                    // data from ADC
+reg             [36:0]x,a,b,R,p,m;                    // data from ADC
 
 wire            abc;
 wire[16:0]      period;
@@ -17,8 +17,24 @@ parameter       DX=1;
 parameter       F=87500;
 
 
-wire            dx1;
+wire            dx1, F1,F2;
 wire            dx2;
+integer k, F0;
+
+
+initial
+begin
+  k=0;
+  F0=0;
+  forever
+  a=F2-F1;
+  b=dx2-dx1;
+  k=a/b; /*k=(F2-F1)/(dx2-dx1);*/
+  p=F1*dx2;
+  m=F2*dx1;
+  R=p-m;
+  F0=R/b; /*F0=((F1*dx2)-(F2*dx1))/(dx2-dx1);*/
+end
 
 //--------------------------------- CLK -------------------------------------------------------------------------
 initial
@@ -111,6 +127,8 @@ begin
 //--------------------------------------------------------------------------------------------------------------------------
 
 
+
+
 //------------------------------------------- DELAY -----------------------------------------------------------------------
 task delay;
 input integer T;
@@ -128,13 +146,17 @@ TR TR_test
   .tr_mode_enable     (tr_mode_enable), 
   .rst                (rst), 
   .x                  (x), 
-  .x0                 (10),
-  .dx1                (40050), 
+  .x0                 (1000),
+  .dx1                (40000), 
   .dx2                (58200),  
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
   .drv_enable_SM      (abc),
-  .N      	           (period)
+  .N      	           (period),
+  .k      	           (k),
+  .F0                 (F0),
+  .F2                 (80000),
+  .F1                 (8000)
 );
 //----------------------------------------------------------------------------------------------------------------------------
 

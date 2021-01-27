@@ -56,12 +56,14 @@ end
 //------------------------------------------------------------------------------------------------------------------------------	 
 
 
-always@(posedge clk)
+
+always@(posedge clk)
   begin
-  if(drv_step==1)
+  if(drv_count==0)
     begin
-        drv_pulse<=1;                            // assign value to number
+        drv_pulse<=0;                            // assign value to number
     end
+  else begin drv_pulse <=1; end  
   end  
 
 
