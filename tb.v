@@ -1,40 +1,39 @@
 `timescale 10ns/10ns
 module test();
   
-reg             clk_50MHz;                  // clk
-reg             data_valid;                 // write data from ADC
-reg             tr_mode_enable;             // signal of permit
-reg             rst;                        // reset
+reg             clk_50MHz;                 // clk                         //output in TR and TR_pulse
+reg             data_valid;                // write data from ADC         //output in TR 
+reg             tr_mode_enable;            // signal of permit            //output in TR
+reg             rst;                       // reset                       //output in TR and TR_pulse
 
-reg             data_valid_trig;
-reg             [36:0]x,a,b,R,p,m;                    // data from ADC
+reg             data_valid_trig;                                          //output in TR_pulse
+reg             [36:0]x;                   // data from ADC
 
-wire            abc;
-wire[16:0]      period;
+wire            abc;                       // wire for connection TR and TR_pulse - drv_enable_SM
+wire          	 [16:0]period;              // wire for connection TR and TR_pulse - N
 
-integer         n;
-parameter       DX=1;
-parameter       F=87500;
+integer         x0=1000;
+parameter       F=87500;                    // limit for x
+integer         dx1=10;
+integer         dx2=10000;                  // limits for dx                // value is set
+integer         F1=16;
+integer         F2=166;                   // MIN and MAX for frequency    // value is set
+
+integer         k;                         // factor of incline            // value is set
 
 
-wire            dx1, F1,F2;
-wire            dx2;
-integer k, F0;
-
-
+//--------------------------- find k --------------------------------------------------------------------------
 initial
 begin
-  k=0;
-  F0=0;
-  forever
-  a=F2-F1;
-  b=dx2-dx1;
-  k=a/b; /*k=(F2-F1)/(dx2-dx1);*/
-  p=F1*dx2;
-  m=F2*dx1;
-  R=p-m;
-  F0=R/b; /*F0=((F1*dx2)-(F2*dx1))/(dx2-dx1);*/
+  k=(F2-F1)/(dx2-dx1);
+  $display("k=%d",k);
+   
+  //F0=((F1*dx2)-(F2*dx1))/(dx2-dx1);
+ // $display("F0=%d",F0);
+ 
 end
+//---------------------------------------------------------------------------------------------------------------
+
 
 //--------------------------------- CLK -------------------------------------------------------------------------
 initial
@@ -94,8 +93,7 @@ begin
     @(posedge clk_50MHz);
       data_valid_trig=0;
     repeat(4)
-    @(posedge clk_50MHz);
-      
+    @(posedge clk_50MHz);    
   end
 end
 //---------------------------------------------------------------------------------------------------------------------
@@ -127,8 +125,6 @@ begin
 //--------------------------------------------------------------------------------------------------------------------------
 
 
-
-
 //------------------------------------------- DELAY -----------------------------------------------------------------------
 task delay;
 input integer T;
@@ -146,17 +142,16 @@ TR TR_test
   .tr_mode_enable     (tr_mode_enable), 
   .rst                (rst), 
   .x                  (x), 
-  .x0                 (1000),
-  .dx1                (40000), 
-  .dx2                (58200),  
+  .x0                 (x0),
+  .dx1                (dx1), 
+  .dx2                (dx2),  
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
   .drv_enable_SM      (abc),
   .N      	           (period),
   .k      	           (k),
-  .F0                 (F0),
-  .F2                 (80000),
-  .F1                 (8000)
+  .F2                 (F2),
+  .F1                 (F1)
 );
 //----------------------------------------------------------------------------------------------------------------------------
 
