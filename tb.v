@@ -12,12 +12,12 @@ reg             [36:0]x;                   // data from ADC
 wire            abc;                       // wire for connection TR and TR_pulse - drv_enable_SM
 wire          	 [16:0]period;              // wire for connection TR and TR_pulse - N
 
-integer         x0=1000;
-parameter       F=87500;                    // limit for x
-integer         dx1=10;
-integer         dx2=10000;                  // limits for dx                // value is set
-integer         F1=16;
-integer         F2=166;                   // MIN and MAX for frequency    // value is set
+integer         x0=5;
+parameter       F=20000;                    // limit for x
+integer         dx1=55;
+integer         dx2=300;                  // limits for dx                // value is set
+integer         F1=60;                     // MIN frequency  6 kHz          // value is set
+integer         F2=6000;                   // MAX frequency  50 kHz         // value is set
 
 integer         k;                         // factor of incline            // value is set
 
@@ -27,10 +27,6 @@ initial
 begin
   k=(F2-F1)/(dx2-dx1);
   $display("k=%d",k);
-   
-  //F0=((F1*dx2)-(F2*dx1))/(dx2-dx1);
- // $display("F0=%d",F0);
- 
 end
 //---------------------------------------------------------------------------------------------------------------
 
@@ -104,7 +100,7 @@ always @(posedge data_valid)
 begin
         if (tr_mode_enable==0)
           begin
-            x=100000;
+            x=30000;
           end 
    
         else 

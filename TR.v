@@ -1,34 +1,35 @@
 module TR
 #(
-parameter       WIDTH_IN=12,                    // x,x0,dx
-parameter       WIDTH_WORK=16,                  // dx1,dx2,v1,v2,v,N,count 
-parameter       DEADZONE=700,                   // stepmotor does not react, dx in DEAD ZONE
-parameter       CONST=0                         // dx->0 = dx->const
+parameter       WIDTH_IN=12,                      // x,x0,dx
+parameter       WIDTH_WORK=16,                    // dx1,dx2,v1,v2,v,N,count 
+parameter       DEADZONE=50,                      // stepmotor does not react, dx in DEAD ZONE
+parameter       CONST=0                           // dx->0 = dx->const
 )
+
 (
-input wire      clk,                            // 50 MHz
-input wire      data_valid,                     // from ADC reading data
-input wire      tr_mode_enable,                 // enable signal, outsignal
-input wire      rst,                            // reset
+input wire      clk,                              // 50 MHz
+input wire      data_valid,                       // from ADC reading data
+input wire      tr_mode_enable,                   // enable signal, outsignal
+input wire      rst,                              // reset
 
-input           [WIDTH_WORK:0]x,              	 // ADC
-input           [WIDTH_IN-1:0]x0,               // TABLE
-input           [WIDTH_WORK:0]dx1, dx2,  
-input     	     [WIDTH_WORK:0]F1,F2,
-input     	     [2*WIDTH_WORK-1:0]k,
+input           [WIDTH_IN-1:0]      x0,           // TABLE
+input           [WIDTH_WORK-1:0]    x,            // ADC
+input           [WIDTH_WORK-1:0]    dx1, dx2,  
+input     	     [WIDTH_WORK-1:0]    F1,F2,
+input     	     [WIDTH_WORK-1:0]    k,
 
-output reg      [WIDTH_WORK-1:0]N,COUNTER, 			  // after d-trigger (write or not data)    
-output reg      drv_step,                       // pulse for SM
-output reg      drv_dir,                        // direction 
-output reg      drv_enable_SM                   // inner signal, enable work SM
+output reg      [WIDTH_WORK-1:0]    N, 			        // after d-trigger (write or not data)    
+output reg      drv_step,                         // pulse for SM
+output reg      drv_dir,                          // direction 
+output reg      drv_enable_SM                     // inner signal, enable work SM
 //output reg      data_valid_trig
 );
 
-reg             [WIDTH_WORK-1:0]dx;             // dx=x-x0
-reg             [(3*WIDTH_WORK)-1:0]N_async;    // amount of pulse
-reg             [WIDTH_WORK-1:0]count=0;        // counter of pulse 
+reg             [WIDTH_WORK-1:0]     dx;          // dx=x-x0
+reg             [(2*WIDTH_WORK)-1:0] N_async;     // amount of pulse
+//reg             [WIDTH_WORK-1:0]count=0;        // counter of pulse 
 //reg             [WIDTH_WORK-1:0]N_r;
-wire            N_r = N_async[47:31];
+//wire N_r = N_async[15:0];
 
 reg             [1:0]c;                    
 
@@ -132,8 +133,7 @@ begin                                       // check position of dx
 			end
 		 
 		else if( (dx1<=dx) && (dx<dx2))
-			begin  
-			  //F0=F1+(k*(dx-dx1));                            
+			begin                           
 				N_async<=k*dx+(F1+(k*(dx-dx1)));
 			end	
 			
@@ -142,28 +142,6 @@ begin                                       // check position of dx
 				N_async<=F1;
 			end				
 end
-
-/*
-	always@(*)                 
-begin 
-		if (dx>=dx2)                           // check position of dx
-		begin                                  // dx>=100
-				N_async=800;
-				//v=60;
-			end
-			
-		else if( (dx1<=dx) && (dx<dx2))
-			begin                                // 10<=dx<100 
-				N_async=39600;                     // ((80000-800)/2)
-				//v=27;
-			end
-			
-	 else if ((DEADZONE<dx) && (dx<dx1))
-			begin                                // 0<dx<10
-				N_async=80000;
-				//v=6;
-			end				
-end*/
 
 
 //--------------------------- d-trigger for N (needed period)---------------------------------------------------------------------------------------
@@ -175,7 +153,8 @@ begin
 		end
 	else if (data_valid==1)
 		begin
-			N<=N_r;	                               // write data
+			N<=N_async[16:0];	
+			//N<=N_r;                               // write data
 		end
 end
 //-----------------------------------------------------------------------------------------------------------------------------	
