@@ -24,7 +24,7 @@ always@(posedge clk)
   begin
   if(data_valid_trig)
     begin
-      number<=N;                                    // assign value to number
+      number<=N;                            // assign value to number
     end
   end  
 //-------------------------------------------------------------------------------------------------------------------------------  
@@ -38,7 +38,7 @@ begin
     drv_step<=0;
     end
     
-  else if (in_drv_enable_SM==1) //enable signal of work SM
+  else if (in_drv_enable_SM==1)             //enable signal of work SM
     begin
       	if (drv_count<=number+1)
 	       begin

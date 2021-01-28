@@ -18,7 +18,7 @@ input           [WIDTH_WORK-1:0]    dx1, dx2,
 input     	     [WIDTH_WORK-1:0]    F1,F2,
 input     	     [WIDTH_WORK-1:0]    k,
 
-output reg      [WIDTH_WORK-1:0]    N, 			        // after d-trigger (write or not data)    
+output reg      [23/*2*WIDTH_WORK-1*/:0]    N, 			        // after d-trigger (write or not data)    
 output reg      drv_step,                         // pulse for SM
 output reg      drv_dir,                          // direction 
 output reg      drv_enable_SM                     // inner signal, enable work SM
@@ -28,15 +28,15 @@ output reg      drv_enable_SM                     // inner signal, enable work S
 reg             [WIDTH_WORK-1:0]     dx;          // dx=x-x0
 reg             [(2*WIDTH_WORK)-1:0] N_async;     // amount of pulse
 //reg             [WIDTH_WORK-1:0]count=0;        // counter of pulse 
-//reg             [WIDTH_WORK-1:0]N_r;
-//wire N_r = N_async[15:0];
+reg             [WIDTH_WORK-1:0]N_r;
+//assign  N_r = N_async[15:0];
 
 reg             [1:0]c;                    
 
-reg             [1:0]state=0;                   // read data from ADC
-localparam      [1:0]STARTING=0;                // state 1 - on/off
-localparam      [1:0]TO_ZERO=1;                 // state 2 - dx->0
-localparam      [1:0]LEAVING_DZ=2;              // state 3 - dx in deadzone
+reg             [1:0]state=0;                     // read data from ADC
+localparam      [1:0]STARTING=0;                  // state 1 - on/off
+localparam      [1:0]TO_ZERO=1;                   // state 2 - dx->0
+localparam      [1:0]LEAVING_DZ=2;                // state 3 - dx in deadzone
 
 
 //-------------------------- ON/OFF WORK ------------------------------------------------------------------------------------
@@ -106,42 +106,41 @@ end
 //------------------------------------------------------------------------------------------------------------------------------	          
 
 
-//------------------ determination of direction ------------------------------------------------------------	
+//------------------ determination of direction --------------------------------------------------------------------------------	
 
 always@(posedge clk)                        // check direction 
 	    begin 
-
 	      if (c==0)
 	        begin
-	          
 		          drv_dir<=1;
-	         end
+	         end   
 	     else
 	         begin 
 		          drv_dir<=0; 
-	     	   end
+	     	   end     	   
   end 
 //-------------------------------------------------------------------------------------------------------------------------------
 
 
 //------------ finding N-async (number of pulse)----------------------------------------------------------------------------------------------
 always@(*)                 
-begin                                       // check position of dx
+begin                                   // check position of dx
 		if (dx>=dx2)                          
 		  begin                                  
 				N_async<=F2;
 			end
-		 
+	
 		else if( (dx1<=dx) && (dx<dx2))
 			begin                           
-				N_async<=k*dx+(F1+(k*(dx-dx1)));
+				N_async<=k[15:0]*dx+(F1+(k*(dx-dx1)));
 			end	
-			
+		
 	 else if ((DEADZONE<dx) && (dx<dx1))
 			begin                                
 				N_async<=F1;
-			end				
+			end					
 end
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 
 //--------------------------- d-trigger for N (needed period)---------------------------------------------------------------------------------------
@@ -150,14 +149,16 @@ begin
 	if(rst)
 		begin
 			N<=0; 		                              // not write data
-		end
+		end	
 	else if (data_valid==1)
 		begin
-			N<=N_async[16:0];	
+			N<=N_async[15:0];	
 			//N<=N_r;                               // write data
 		end
 end
 //-----------------------------------------------------------------------------------------------------------------------------	
+
+
 
 /*always@(posedge clk) 
 begin

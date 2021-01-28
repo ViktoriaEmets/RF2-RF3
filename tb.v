@@ -16,8 +16,8 @@ integer         x0=5;
 parameter       F=20000;                    // limit for x
 integer         dx1=55;
 integer         dx2=300;                  // limits for dx                // value is set
-integer         F1=60;                     // MIN frequency  6 kHz          // value is set
-integer         F2=6000;                   // MAX frequency  50 kHz         // value is set
+integer         F1=6000;                     // MIN frequency  6 kHz          // value is set
+integer         F2=60000;                   // MAX frequency  60 kHz         // value is set
 
 integer         k;                         // factor of incline            // value is set
 
