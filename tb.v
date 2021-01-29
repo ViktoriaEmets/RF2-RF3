@@ -14,8 +14,8 @@ wire          	 [16:0]period;              // wire for connection TR and TR_puls
 
 integer         x0=5;
 parameter       F=20000;                    // limit for x
-integer         dx1=2500;
-integer         dx2=5000;                  // limits for dx                // value is set
+integer         dx1=250;
+integer         dx2=555;                  // limits for dx                // value is set
 integer         F1=6000;                     // MIN frequency  6 kHz          // value is set
 integer         F2=50000;                   // MAX frequency  60 kHz         // value is set
 
@@ -25,10 +25,23 @@ integer         k;                         // factor of incline            // va
 //--------------------------- find k --------------------------------------------------------------------------
 initial
 begin
-  k=(F2-F1)/(dx2-dx1);
+  k=((F2-F1)/(dx2-dx1));
   $display("k=%d",k);
 end
 //---------------------------------------------------------------------------------------------------------------
+
+reg [32:0] Y,K,TX;
+integer l=64;
+initial 
+begin
+  
+  K=((F2-F1)/(dx2-dx1))*l;
+  $display("K=%d",K);
+  TX=dx1/l;
+  $display("TX=%d",TX);
+  Y=K*TX;
+  $display("Y=%d",Y);
+end
 
 
 //--------------------------------- CLK -------------------------------------------------------------------------
