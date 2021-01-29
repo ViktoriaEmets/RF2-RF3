@@ -16,7 +16,7 @@ input           [WIDTH_IN-1:0]      x0,           // TABLE
 input           [WIDTH_WORK-1:0]    x,            // ADC
 input           [WIDTH_WORK-1:0]    dx1, dx2,  
 input     	     [WIDTH_WORK-1:0]    F1,F2,
-input     	     [WIDTH_WORK-1:0]    k,
+input     	     [15:0]    k,
 
 output reg      [WIDTH_WORK-1:0]    N, 			        // after d-trigger (write or not data)    
 output reg      drv_step,                         // pulse for SM
@@ -25,8 +25,8 @@ output reg      drv_enable_SM                     // inner signal, enable work S
 //output reg      data_valid_trig
 );
 
-reg             [WIDTH_WORK-1:0]     dx;          // dx=x-x0
-reg             [39:0] N_async;     // amount of pulse
+reg             [15:0]     dx;          // dx=x-x0
+reg             [31:0] N_async;                   // amount of pulse
 reg             [WIDTH_WORK-1:0]count;        
 reg             [WIDTH_WORK-1:0]N_r;
 //assign  N_r = N_async[15:0];
@@ -132,7 +132,7 @@ begin                                   // check position of dx
 	
 		else if( (dx1<=dx) && (dx<dx2))
 			begin                           
-				N_async<=/*k*dx*/(k*(dx-dx1))+F1;
+				N_async<=(k*(dx-dx1))+F1;
 			end	
 		
 	 else if ((DEADZONE<dx) && (dx<dx1))
@@ -152,7 +152,7 @@ begin
 		end	
 	else if (data_valid==1)
 		begin
-			N<=N_async[23:8];	                              // write data
+			N<=N_async[15:0];	                              // write data
 		end
 end
 //-----------------------------------------------------------------------------------------------------------------------------	

@@ -7,15 +7,15 @@ reg             tr_mode_enable;            // signal of permit            //outp
 reg             rst;                       // reset                       //output in TR and TR_pulse
 
 reg             data_valid_trig;                                          //output in TR_pulse
-reg             [36:0]x;                   // data from ADC
+reg             [35:0]x;                   // data from ADC
 
 wire            abc;                       // wire for connection TR and TR_pulse - drv_enable_SM
 wire          	 [16:0]period;              // wire for connection TR and TR_pulse - N
 
 integer         x0=5;
 parameter       F=20000;                    // limit for x
-integer         dx1=55;
-integer         dx2=300;                  // limits for dx                // value is set
+integer         dx1=2500;
+integer         dx2=5000;                  // limits for dx                // value is set
 integer         F1=6000;                     // MIN frequency  6 kHz          // value is set
 integer         F2=50000;                   // MAX frequency  60 kHz         // value is set
 
