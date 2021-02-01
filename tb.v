@@ -14,12 +14,12 @@ wire          	 [16:0]period;              // wire for connection TR and TR_puls
 
 integer         x0=5;
 parameter       F=20000;                    // limit for x
-integer         dx1=250;
-integer         dx2=555;                  // limits for dx                // value is set
-integer         F1=6000;                     // MIN frequency  6 kHz          // value is set
-integer         F2=50000;                   // MAX frequency  60 kHz         // value is set
+/*integer*/ reg     [16:0]dx1=250;
+/*integer*/ reg     [16:0]dx2=555;                  // limits for dx                // value is set
+/*integer*/ reg     [16:0]F1=6000;                     // MIN frequency  6 kHz          // value is set
+/*integer*/ reg     [16:0] F2=50000;                   // MAX frequency  60 kHz         // value is set
 
-integer         k;                         // factor of incline            // value is set
+/*integer*/ reg      [19:0]  k;                         // factor of incline            // value is set
 
 integer L=16;
 //--------------------------- find k --------------------------------------------------------------------------
