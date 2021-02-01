@@ -3,7 +3,8 @@ module TR
 parameter       WIDTH_IN=12,                      // x,x0,dx
 parameter       WIDTH_WORK=16,                    // dx1,dx2,v1,v2,v,N,count 
 parameter       DEADZONE=50,                      // stepmotor does not react, dx in DEAD ZONE
-parameter       CONST=0                           // dx->0 = dx->const
+parameter       CONST=0,                          // dx->0 = dx->const
+parameter       L=16
 )
 
 (
@@ -16,7 +17,7 @@ input           [WIDTH_IN-1:0]      x0,           // TABLE
 input           [WIDTH_WORK-1:0]    x,            // ADC
 input           [WIDTH_WORK-1:0]    dx1, dx2,  
 input     	     [WIDTH_WORK-1:0]    F1,F2,
-input     	     [19:0]    k,
+input     	     [19:0]    K,
 
 output reg      [WIDTH_WORK-1:0]    N, 			        // after d-trigger (write or not data)    
 output reg      drv_step,                         // pulse for SM
@@ -132,7 +133,8 @@ begin                                   // check position of dx
 	
 		else if( (dx1<=dx) && (dx<dx2))
 			begin                           
-				N_async<=(k*(dx-dx1))+F1;
+				N_async<=((K*(dx-dx1))/L)+F1;
+				//$display("N_async=%d",N_async);
 			end	
 		
 	 else if ((DEADZONE<dx) && (dx<dx1))

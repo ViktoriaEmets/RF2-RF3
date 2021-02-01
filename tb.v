@@ -21,7 +21,7 @@ integer         F2=50000;                   // MAX frequency  60 kHz         // 
 
 integer         k;                         // factor of incline            // value is set
 
-
+integer L=16;
 //--------------------------- find k --------------------------------------------------------------------------
 initial
 begin
@@ -31,16 +31,15 @@ end
 //---------------------------------------------------------------------------------------------------------------
 
 reg [32:0] Y,K,TX;
-integer l=64;
 initial 
 begin
-  
-  K=((F2-F1)/(dx2-dx1))*l;
-  $display("K=%d",K);
-  TX=dx1/l;
+TX=k*L*dx1;
   $display("TX=%d",TX);
-  Y=K*TX;
-  $display("Y=%d",Y);
+  K=(TX/L);
+  $display("K=%d",K);
+ // Y=K*TX;
+  //$display("Y=%d",Y);
+  
 end
 
 
