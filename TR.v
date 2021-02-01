@@ -26,11 +26,9 @@ output reg      drv_enable_SM                     // inner signal, enable work S
 //output reg      data_valid_trig
 );
 
-reg             [15:0]     dx;          // dx=x-x0
+reg             [WIDTH_WORK-1:0]    dx;          // dx=x-x0
 reg             [35:0] N_async;                   // amount of pulse
 reg             [WIDTH_WORK-1:0]count;        
-reg             [WIDTH_WORK-1:0]N_r;
-//assign  N_r = N_async[15:0];
 
 reg             [1:0]c;                    
 
@@ -134,7 +132,6 @@ begin                                   // check position of dx
 		else if( (dx1<=dx) && (dx<dx2))
 			begin                           
 				N_async<=((K*(dx-dx1))/L)+F1;
-				//$display("N_async=%d",N_async);
 			end	
 		
 	 else if ((DEADZONE<dx) && (dx<dx1))

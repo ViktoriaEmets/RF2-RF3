@@ -57,7 +57,7 @@ end
 
 
 
-always@(posedge clk)
+/*always@(posedge clk)
   begin
   if(drv_count==0)
     begin
@@ -65,7 +65,7 @@ always@(posedge clk)
     end
   else begin drv_pulse <=1; end  
   end  
-
+*/
 
    
 endmodule
