@@ -1,7 +1,9 @@
 module TR_pulse
  #(
-    parameter SIZE=16
+    parameter SIZE=16,
+    parameter DIVIDER=1000
   )
+  
   (
     input wire                    clk,                            // 50 MHz
     input wire                    rst,                            // reset
@@ -16,7 +18,7 @@ module TR_pulse
   
     reg          [32:0]           drv_count;                      // counter of pulse
     reg          [SIZE-1:0]       number;                         // number of counter 
-    
+    reg          [16:0]           count_step;
     
     
 //-------------------------- number for counter -----------------------------------------------------------------------------------  
@@ -57,15 +59,22 @@ end
 
 
 
-/*always@(posedge clk)
-  begin
-  if(drv_count==0)
-    begin
-        drv_pulse<=0;                            // assign value to number
-    end
-  else begin drv_pulse <=1; end  
-  end  
-*/
 
+always@(posedge clk)
+begin
+  if (in_drv_enable_SM==1)
+    begin
+      if (count_step<=DIVIDER)
+        begin
+          count_step<=count_step+1;
+          drv_pulse<=1;
+        end
+     else
+        begin
+          count_step<=0;
+          drv_pulse<=0;
+        end    
+    end  
+end
    
 endmodule
