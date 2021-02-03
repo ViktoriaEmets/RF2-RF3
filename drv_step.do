@@ -8,11 +8,12 @@ quietly virtual function -install /test -env /test { (2)} virtual_000005
 quietly virtual function -install /test -env /test { 150241.76} virtual_000006
 quietly virtual function -install /test -env /test { (1000)} virtual_000007
 quietly WaveActivateNextPane {} 0
+add wave -noupdate /test/rst
+add wave -noupdate -format Analog-Step -height 74 -max 6250.0 -radix unsigned /test/TR_pulse_test/N
+add wave -noupdate -format Analog-Step -height 74 -max 6252.0 -radix unsigned /test/TR_pulse_test/drv_count
 add wave -noupdate /test/TR_pulse_test/drv_step
-add wave -noupdate -format Analog-Step -height 74 -max 8401.0 -radix unsigned /test/TR_pulse_test/count_step
-add wave -noupdate /test/TR_pulse_test/drv_pulse
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {5717210 ns} 0}
+WaveRestoreCursors {{Cursor 1} {13393300 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 235
 configure wave -valuecolwidth 93
@@ -28,4 +29,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {31500 us}
+WaveRestoreZoom {0 ns} {42 ms}

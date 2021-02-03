@@ -10,6 +10,7 @@ parameter                         L=16
 (
 input wire                        clk,                    // 50 MHz
 input wire                        data_valid,             // from ADC reading data
+
 input wire                        tr_mode_enable,         // enable signal, outsignal
 input wire                        rst,                    // reset
 
@@ -28,7 +29,7 @@ output reg                        drv_enable_SM           // inner signal, enabl
 reg           [WIDTH_WORK-1:0]    dx;                     // dx=x-x0
 reg           [35:0]              N_async;                // amount of pulse
 reg           [WIDTH_WORK-1:0]    count;        
-
+ 
 reg           [1:0]               c;                    
 
 reg           [1:0]               state=0;                // read data from ADC
@@ -143,7 +144,7 @@ begin                                   // check position of dx
 	
 		else if( (dx1<=dx) && (dx<dx2))
 			begin                           
-				N_async<=(k*(dx-dx1))/L+F1;
+				N_async<=((k*(dx-dx1))/L)+F1;
 			end	
 		
 	 else if ((DEADZONE<dx) && (dx<dx1))
