@@ -15,7 +15,7 @@ module TR_pulse
     output reg                    drv_pulse, out
   );
   
-    reg          [32:0]           drv_count;                      // counter of pulse
+    reg          [2*SIZE-1:0]     drv_count;                      // counter of pulse
     reg          [SIZE-1:0]       NUMBER;                         // number of counter
      
 //-------------------------- number for counter -----------------------------------------------------------------------------------  

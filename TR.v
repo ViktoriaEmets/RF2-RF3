@@ -17,17 +17,17 @@ input wire                        rst,                    // reset
 input         [WIDTH_IN-1:0]      x0,                     // TABLE
 input         [WIDTH_WORK-1:0]    x,                      // ADC
 input         [WIDTH_WORK-1:0]    dx1, dx2,  
-input     	   [WIDTH_WORK-1:0]    F1,F2,
-input     	   [19:0]              k,
+input         [WIDTH_WORK-1:0]    F1,F2,
+input         [WIDTH_WORK+3:0]    k, 			  //[19:0]
 
-output reg    [WIDTH_WORK-1:0]    N, 			                  // after d-trigger (write or not data)    
+output reg    [WIDTH_WORK-1:0]    N, 			  // after d-trigger (write or not data)    
 output reg                        drv_step,               // pulse for SM
 output reg                        drv_dir,                // direction 
 output reg                        drv_enable_SM           // inner signal, enable work SM
 );
 
 reg           [WIDTH_WORK-1:0]    dx;                     // dx=x-x0
-reg           [35:0]              N_async;                // amount of pulse
+reg           [2*WIDTH_WORK+3:0]  N_async;                // amount of pulse [35:0]
 reg           [WIDTH_WORK-1:0]    count;        
  
 reg           [1:0]               c;                    
