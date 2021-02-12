@@ -145,8 +145,8 @@ TR TR_test
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
   .drv_enable_SM      (abc),
-  .N      	           (period),
-  .k      	           (k),
+  .n      	          (period),
+  .k      	          (k),
   .F2                 (F2),
   .F1                 (F1)
 );
@@ -161,7 +161,7 @@ TR_pulse TR_pulse_test
   .d_v                (d_v), 
   .drv_step           (drv_step),
   .drv_en_SM          (abc),
-  .N     	            (period)
+  .n     	            (period)
 );
 //----------------------------------------------------------------------------------------------------------------------------
 

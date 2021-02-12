@@ -1,6 +1,7 @@
 module TR_pulse
  #(
-    parameter SIZE=16
+    parameter SIZE   = 16,
+    parameter N      = 100  // nmber of pulse in hand mode
   )
   
   (
@@ -12,14 +13,20 @@ module TR_pulse
 
     input               drv_en_SM,     // work SM
 
-    input [SIZE-1:0]    N,             // period for filling with pulse
+    input [SIZE-1:0]    n,             // period for filling with pulse
     
     output reg          drv_step       // pulse for SM
  
   );
+  localparam
+  AUTO
+  MOVE
+  MOVE_N
+  STOP
   
     reg [SIZE-1:0]     number,        // counter of pulse
-                       drv_count;        
+                       drv_count;
+    reg                drv_invert_step;        
                           
 
 //-------------------------- number for counter -----------------------------------------------------------------------------------  
@@ -27,7 +34,7 @@ always@(posedge clk)
   begin
   if(d_v)
     begin
-      number<=N;  // assign value to number
+      number<=n;  // assign value to number
     end
   end  
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -62,5 +69,21 @@ begin
 		             end
 end
 //------------------------------------------------------------------------------------------------------------------------------	 
+
+
+//---------------------------- invert step ---------------------------------------------------
+always @(posedge clk)
+begin
+  if (rst)
+    begin
+      drv_invert_step<=0;
+    end
+  else
+    begin
+      drv_invert_step<=!drv_step;
+    end  
+end
+//----------------------------------------------------------------------------------------------------------------------------------------
+
 
 endmodule

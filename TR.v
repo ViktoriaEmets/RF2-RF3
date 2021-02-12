@@ -25,7 +25,7 @@ input [WIDTH_WORK-1:0]  	   x,              // ADC
 							   F2, 					
 							   k, 			  //[19:0]
 
-output reg [WIDTH_WORK-1:0]    N, 			  // after d-trigger (write or not data)  
+output reg [WIDTH_WORK-1:0]    n, 			  // after d-trigger (write or not data)  
 
 output reg                     drv_step,      // pulse for SM
                        		   drv_dir,       // direction 
@@ -34,7 +34,7 @@ output reg                     drv_step,      // pulse for SM
 
 reg [WIDTH_WORK-1:0]    	   dx,            // dx=x-x0
           					   count;   
-reg [WIDTH_PULSE+3:0]          N_async;       // amount of pulse [35:0]
+reg [WIDTH_PULSE+3:0]          n_async;       // amount of pulse [35:0]
      
  
 reg [1:0]               	   c;                    
@@ -134,17 +134,17 @@ always@(*)
 begin     // check position of dx
 		if (dx>=dx2)                          
 		  begin                                  
-				N_async<=F2;
+				n_async<=F2;
 			end
 	
 		else if( (dx1<=dx) && (dx<dx2))
 			begin                           
-				N_async<=((k*(dx-dx1))/L)+F1;
+				n_async<=((k*(dx-dx1))/L)+F1;
 			end	
 		
 	 else if ((DEADZONE<dx) && (dx<dx1))
 			begin                                
-				N_async<=F1;
+				n_async<=F1;
 			end					
 end
 //------------------------------------------------------------------------------------------------------------------------------------------
@@ -155,11 +155,11 @@ always@(posedge data_valid or posedge rst)  //cheak a condition
 begin
 	if(rst)
 		begin
-			N<=0; 		                    // not write data
+			n<=0; 		                    // not write data
 		end	
 	else if (data_valid==1)
 		begin
-			N<=N_async[19:3];	            // write data
+			n<=n_async[19:3];	            // write data
 		end
 end
 //-----------------------------------------------------------------------------------------------------------------------------	
