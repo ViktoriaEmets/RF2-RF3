@@ -18,16 +18,84 @@ module TR_pulse
     output reg          drv_step       // pulse for SM
  
   );
-  localparam
-  AUTO
-  MOVE
-  MOVE_N
-  STOP
-  
-    reg [SIZE-1:0]     number,        // counter of pulse
-                       drv_count;
-    reg                drv_invert_step;        
-                          
+
+reg [SIZE-1:0]          number,        // counter of pulse
+                        drv_count;
+reg                     drv_invert_step;        
+
+localparam
+  IDLE    = 4'b00001,
+  MOVE    = 4'b00010,
+  MOVE_N  = 4'b00100,
+  STOP    = 4'b01000,
+  AUTO    = 4'b10000;
+
+reg [4:0]          regime;
+
+
+//------------------------------------------------------------------------------------
+always @(posedge clk)
+begin
+  if (rst)
+    begin
+      regime <= IDLE; // шд не вращаются 
+    end
+  else
+    begin
+      case (regime)
+
+      IDLE:
+        begin
+          // шд не вращаются
+          // приходит некоторая команда 
+          // команда = "1"
+          regime <= AUTO;
+          // команда = "0"
+          regime <= MOVE;
+        end
+
+
+      MOVE:
+        begin
+          // ваполняются какие-то условия в том числе  
+          // drv_en_SM = 1
+          // начинают идти импульсы
+          // как только N заданно определенному числу
+          regime <= MOVE_N; 
+        end
+
+
+      MOVE_N:
+       begin
+          // как только  drv_en_SM = 0
+           regime <= STOP;
+        end
+
+
+      STOP:  
+       begin
+          regime <= IDLE;
+        end
+
+
+      AUTO:
+       begin
+        // режим работы описан ниже 
+        end
+      
+      default:
+             regime <= IDLE;
+
+      endcase 
+
+    end
+end
+//----------------------------------------------------------------------------------------
+
+
+
+
+
 
 //-------------------------- number for counter -----------------------------------------------------------------------------------  
 always@(posedge clk)

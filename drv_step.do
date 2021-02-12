@@ -12,8 +12,9 @@ add wave -noupdate /test/rst
 add wave -noupdate -format Analog-Step -height 74 -max 6250.0 -radix unsigned /test/TR_pulse_test/N
 add wave -noupdate -format Analog-Step -height 74 -max 6252.0 -radix unsigned /test/TR_pulse_test/drv_count
 add wave -noupdate /test/TR_pulse_test/drv_step
+add wave -noupdate /test/TR_pulse_test/drv_invert_step
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {13393300 ns} 0}
+WaveRestoreCursors {{Cursor 1} {9878300 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 235
 configure wave -valuecolwidth 93
