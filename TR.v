@@ -1,41 +1,50 @@
 module TR
 #(
-parameter                         WIDTH_IN=12,            // x,x0,dx
-parameter                         WIDTH_WORK=16,          // dx1,dx2,v1,v2,v,N,count 
-parameter                         DEADZONE=50,            // stepmotor does not react, dx in DEAD ZONE
-parameter                         CONST=0,                // dx->0 = dx->const
-parameter                         L=16
+parameter  WIDTH_IN        = 12,   // x,x0,dx
+parameter  WIDTH_WORK      = 16,   // dx1,dx2,v1,v2,v,N,count 
+parameter  WIDTH_PULSE     = 32,   // for N_async
+
+parameter  DEADZONE        = 50,   // stepmotor does not react, dx in DEAD ZONE
+parameter  CONST           = 0,    // dx->0 = dx->const
+parameter  L               = 16
 )
 
 (
-input wire                        clk,                    // 50 MHz
-input wire                        data_valid,             // from ADC reading data
+//----------- input control signals ------------------------------------------
+input wire          		   clk,            // 50 MHz
+                   	 		   data_valid,     // from ADC reading data
+                    		   tr_mode_enable, // enable signal, outsignal
+                    		   rst,            // reset
+//-------------------------------------------------------------------------------
+input [WIDTH_IN-1:0]    	   x0,             // TABLE
 
-input wire                        tr_mode_enable,         // enable signal, outsignal
-input wire                        rst,                    // reset
+input [WIDTH_WORK-1:0]  	   x,              // ADC
+          					   dx1, 
+							   dx2,  
+          					   F1,
+							   F2, 					
+							   k, 			  //[19:0]
 
-input         [WIDTH_IN-1:0]      x0,                     // TABLE
-input         [WIDTH_WORK-1:0]    x,                      // ADC
-input         [WIDTH_WORK-1:0]    dx1, dx2,  
-input         [WIDTH_WORK-1:0]    F1,F2,
-input         [WIDTH_WORK+3:0]    k, 			  //[19:0]
+output reg [WIDTH_WORK-1:0]    N, 			  // after d-trigger (write or not data)  
 
-output reg    [WIDTH_WORK-1:0]    N, 			  // after d-trigger (write or not data)    
-output reg                        drv_step,               // pulse for SM
-output reg                        drv_dir,                // direction 
-output reg                        drv_enable_SM           // inner signal, enable work SM
+output reg                     drv_step,      // pulse for SM
+                       		   drv_dir,       // direction 
+                       		   drv_enable_SM  // inner signal, enable work SM
 );
 
-reg           [WIDTH_WORK-1:0]    dx;                     // dx=x-x0
-reg           [2*WIDTH_WORK+3:0]  N_async;                // amount of pulse [35:0]
-reg           [WIDTH_WORK-1:0]    count;        
+reg [WIDTH_WORK-1:0]    	   dx,            // dx=x-x0
+          					   count;   
+reg [WIDTH_PULSE+3:0]          N_async;       // amount of pulse [35:0]
+     
  
-reg           [1:0]               c;                    
+reg [1:0]               	   c;                    
 
-reg           [1:0]               state=0;                // read data from ADC
-localparam    [1:0]               STARTING=0;             // state 1 - on/off
-localparam    [1:0]               TO_ZERO=1;              // state 2 - dx->0
-localparam    [1:0]               LEAVING_DZ=2;           // state 3 - dx in deadzone
+reg [1:0]               	   state=0;       // read data from ADC
+
+localparam
+STARTING      = 0,   // state 1 - on/off
+TO_ZERO       = 1,   // state 2 - dx->0
+LEAVING_DZ    = 2;   // state 3 - dx in deadzone
 
 
 //-------------------------- ON/OFF WORK ------------------------------------------------------------------------------------
@@ -43,7 +52,7 @@ always@(posedge clk)
 begin
 case(state)
   
-  STARTING:                              // state 1 - on/off
+  STARTING:    // state 1 - on/off
   begin
     if(tr_mode_enable==1)
       begin
@@ -55,7 +64,7 @@ case(state)
     end
   end 
   
-  TO_ZERO:                               // state 2 - dx->0
+  TO_ZERO:     // state 2 - dx->0
   begin
      if (tr_mode_enable==0)
           begin
@@ -68,7 +77,7 @@ case(state)
           end 
    end
   
-   LEAVING_DZ:                           // state 3 - dx=0 deadzone
+   LEAVING_DZ: // state 3 - dx=0 deadzone
    begin
       if (tr_mode_enable==0)
           begin
@@ -106,7 +115,7 @@ end
 
 
 //------------------ determination of direction --------------------------------------------------------------------------------	
-always@(posedge clk)                        // check direction 
+always@(posedge clk)  // check direction 
 	    begin 
 	      if (c==0)
 	        begin
@@ -122,7 +131,7 @@ always@(posedge clk)                        // check direction
 
 //------------ finding N-async (number of pulse)----------------------------------------------------------------------------------------------
 always@(*)                 
-begin                                   // check position of dx
+begin     // check position of dx
 		if (dx>=dx2)                          
 		  begin                                  
 				N_async<=F2;
@@ -146,11 +155,11 @@ always@(posedge data_valid or posedge rst)  //cheak a condition
 begin
 	if(rst)
 		begin
-			N<=0; 		                              // not write data
+			N<=0; 		                    // not write data
 		end	
 	else if (data_valid==1)
 		begin
-			N<=N_async[19:3];	                    // write data
+			N<=N_async[19:3];	            // write data
 		end
 end
 //-----------------------------------------------------------------------------------------------------------------------------	

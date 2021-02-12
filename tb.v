@@ -1,26 +1,28 @@
 `timescale 10ns/10ns
 module test();
   
-reg             clk_50MHz;                 // clk                         //output in TR and TR_pulse
-reg             data_valid;                // write data from ADC         //output in TR 
-reg             tr_mode_enable;            // signal of permit            //output in TR
-reg             rst;                       // reset                       //output in TR and TR_pulse
+reg          clk_50MHz,      // clk                         //output in TR and TR_pulse
+             data_valid,     // write data from ADC         //output in TR 
+             tr_mode_enable, // signal of permit            //output in TR
+             rst,            // reset                       //output in TR and TR_pulse
+             d_v;                                           //output in TR_pulse
+           
+reg [35:0]   x;        // data from ADC
 
-reg             d_v;                                          //output in TR_pulse
-reg             [35:0]x;                   // data from ADC
+wire         abc;      // wire for connection TR and TR_pulse - drv_enable_SM
 
-wire            abc;                       // wire for connection TR and TR_pulse - drv_enable_SM
-wire          	 [16:0]period;              // wire for connection TR and TR_pulse - N
+wire [16:0]  period;   // wire for connection TR and TR_pulse - N
 
-integer         x0=5;
-parameter       F=20000;                    // limit for x
-integer         dx1=250;
-integer         dx2=555;                     // limits for dx                 // value is set
-integer         F1=6000;                     // MIN frequency  6 kHz          // value is set
-integer         F2=50000;                   // MAX frequency  60 kHz          // value is set
+parameter    F=20000;  // limit for x
 
-integer         k;                         // factor of incline               // value is set
-integer         L=16;
+integer      x0=5,
+             dx1=250,
+             dx2=555,  // limits for dx                 // value is set
+             F1=6000,  // MIN frequency  6 kHz          // value is set
+             F2=50000, // MAX frequency  60 kHz          // value is set
+             L=16;
+
+integer      k;        // factor of incline               // value is set
 
 
 //--------------------------- find k --------------------------------------------------------------------------
@@ -29,18 +31,6 @@ begin
   k=((F2-F1)/(dx2-dx1))*L;
   $display("k=%d",k);
 end
-
-/*integer L=16;
-reg [32:0]  K,TX;
-initial 
-begin
-  TX=k*L*dx;
-  $display("TX=%d",TX);
-  K=(TX/L);
-  $display("K=%d",K);
-end
-*/
-
 //---------------------------------------------------------------------------------------------------------------
  
 
