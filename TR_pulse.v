@@ -1,7 +1,8 @@
 module TR_pulse
  #(
     parameter SIZE   = 16,
-    parameter N      = 100  // nmber of pulse in hand mode
+    parameter N      = 100,  // nmber of pulse in hand mode
+    parameter NUM_PERIOD = 2000 //  для частоты 25 кГц
   )
   
   (
@@ -23,6 +24,7 @@ reg [SIZE-1:0]          number,        // counter of pulse
                         drv_count;
 reg                     drv_invert_step;        
 
+
 localparam
   IDLE    = 4'b00001,
   MOVE    = 4'b00010,
@@ -34,6 +36,62 @@ reg [4:0]          regime;
 
 
 //------------------------------------------------------------------------------------
+// МОЖНО ЛИ СДЕЛАТЬ ТАК?
+always @(posedge clk)
+begin
+
+
+  if (regime|=1<<1) // записать единицу в первый бит 
+                    // импульсы идут постоянно      
+    begin // что-то сдеоать с импульсами, чтобы они постоянно работали?
+      if (drv_en_SM <= 1)
+      begin
+      	if (drv_count<=NUM_PERIOD)
+	       begin
+		       drv_count<=drv_count+1;             
+	       end 
+       else 
+	       begin
+		        drv_count<=0;
+		     end
+	   end
+
+      if (drv_count>0 && drv_count <= NUM_PERIOD >>2)	// form lasting of pulse
+		             begin
+		               drv_step<=1;
+	              	end
+	            else 
+		             begin
+		               drv_step<=0;
+		             end
+    end
+
+
+  else if (regime|=1<<2) // записать единицу во второй бит
+                         // импульсы идут N раз 
+          begin
+            // как сделать так чтобы импульсов было определенное кол-во
+          end    
+
+
+  else if (regime|=1<<3) // записать единицу в третий бит    
+                         // нет импульсов
+          begin
+            drv_en_SM <= 0;
+            drv_step <= 0;
+          end   
+
+
+  else if (regime|=1<<4) // записать единицу в старший бит
+                         // автоматический режим 
+          begin
+            // как сделать ? как правильнее сослаться на блоки ниже? 
+          end                                         
+end
+
+
+/* 
+// переход между состояниями - вообще нет идей 
 always @(posedge clk)
 begin
   if (rst)
@@ -89,7 +147,7 @@ begin
       endcase 
 
     end
-end
+end*/
 //----------------------------------------------------------------------------------------
 
 
