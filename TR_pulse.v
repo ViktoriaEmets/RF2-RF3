@@ -6,153 +6,134 @@ module TR_pulse
   )
   
   (
+    output reg          drv_pulse,       // pulse for SM
+
     //----------- input control signals ------------------------------------------
     input               clk,           // 50 MHz
                         rst,           // reset
                         d_v,           // from ADC reading data(this signal has a delay 20 ns)
     //----------------------------------------------------------------------------
 
-    input               drv_en_SM,     // work SM
 
+    input               drv_en_SM,     // work SM
     input [SIZE-1:0]    n,             // period for filling with pulse
-    
-    output reg          drv_step       // pulse for SM
- 
+
+
+    //---------------- порт ---------------------------------------------------------
+    input               invert_pulse = 1, // если invert_pulse=1, то на выход подавать инвертированные импульсы
+    //-------------------------------------------------------------------------------
+
+
+    //-------------- команды -------------------------------------------------------
+    input               stop,
+                        start,
+                        start_N,
+                        avto
+    //--------------------------------------------------------------------------------------   
+
   );
 
 reg [SIZE-1:0]          number,        // counter of pulse
+                        period,
+                        count_N,
                         drv_count;
-reg                     drv_invert_step;        
+reg                     drv_invert_step;
+                        step;
+                        step_N;
+                        drv_step;        
 
+reg [3:0]          regime;
 
 localparam
-  IDLE    = 4'b00001,
-  MOVE    = 4'b00010,
-  MOVE_N  = 4'b00100,
-  STOP    = 4'b01000,
-  AUTO    = 4'b10000;
-
-reg [4:0]          regime;
-
+  IDLE    = 3'b0001,
+  MOVE    = 3'b0010,
+  MOVE_N  = 3'b0100,
+  AUTO    = 3'b1000;
 
 //------------------------------------------------------------------------------------
-// МОЖНО ЛИ СДЕЛАТЬ ТАК?
-always @(posedge clk)
+always@(posedge clk)
 begin
-
-
-  if (regime|=1<<1) // записать единицу в первый бит 
-                    // импульсы идут постоянно      
-    begin // что-то сдеоать с импульсами, чтобы они постоянно работали?
-      if (drv_en_SM <= 1)
+case(regime)
+ //------------ переключение между состояниями --------------
+ IDLE:
+ begin
+  if(start)
       begin
-      	if (drv_count<=NUM_PERIOD)
+        regime<=MOVE;     	           
+      end 
+
+  else if (start_N)
+    begin
+      regime<=MOVE_N;
+    end
+
+  else if (avto)
+    begin
+      regime<=AUTO;
+    end  
+
+  else 
+    begin
+      regime<=IDLE;
+    end  
+ end
+
+MOVE:
+ begin
+  if (stop)
+    begin
+      regime<=IDLE;
+    end
+  else 
+      begin
+        period <=NUM_PERIOD;
+      end 
+
+     /* begin
+      	if (count_N<=NUM_PERIOD)
 	       begin
-		       drv_count<=drv_count+1;             
+		       count_N<=count_N+1;             
 	       end 
        else 
 	       begin
-		        drv_count<=0;
+		        count_N<=0;
 		     end
-	   end
+	   end  */ 
+ end
 
-      if (drv_count>0 && drv_count <= NUM_PERIOD >>2)	// form lasting of pulse
-		             begin
-		               drv_step<=1;
-	              	end
-	            else 
-		             begin
-		               drv_step<=0;
-		             end
-    end
-
-
-  else if (regime|=1<<2) // записать единицу во второй бит
-                         // импульсы идут N раз 
-          begin
-            // как сделать так чтобы импульсов было определенное кол-во
-          end    
-
-
-  else if (regime|=1<<3) // записать единицу в третий бит    
-                         // нет импульсов
-          begin
-            drv_en_SM <= 0;
-            drv_step <= 0;
-          end   
-
-
-  else if (regime|=1<<4) // записать единицу в старший бит
-                         // автоматический режим 
-          begin
-            // как сделать ? как правильнее сослаться на блоки ниже? 
-          end                                         
-end
-
-
-/* 
-// переход между состояниями - вообще нет идей 
-always @(posedge clk)
-begin
-  if (rst)
+ MOVE_N:
+ begin
+  if (count_N==0)
     begin
-      regime <= IDLE; // шд не вращаются 
+      regime<=IDLE;
     end
-  else
+  else 
     begin
-      case (regime)
-
-      IDLE:
-        begin
-          // шд не вращаются
-          // приходит некоторая команда 
-          // команда = "1"
-          regime <= AUTO;
-          // команда = "0"
-          regime <= MOVE;
-        end
-
-
-      MOVE:
-        begin
-          // ваполняются какие-то условия в том числе  
-          // drv_en_SM = 1
-          // начинают идти импульсы
-          // как только N заданно определенному числу
-          regime <= MOVE_N; 
-        end
-
-
-      MOVE_N:
-       begin
-          // как только  drv_en_SM = 0
-           regime <= STOP;
-        end
-
-
-      STOP:  
-       begin
-          regime <= IDLE;
-        end
-
-
-      AUTO:
-       begin
-        // режим работы описан ниже 
-        end
-      
-      default:
-             regime <= IDLE;
-
-      endcase 
-
+      if (count_N >= N)
+	       begin
+		       count_N <= count_N-1;   
+           step_N <=0;          
+	       end 
+       else 
+	       begin
+		        count_N<=1;
+            step_N <=1;
+         end
     end
-end*/
+ end
+
+ AUTO:
+ begin
+  if (!avto)
+    begin
+      regime <= IDLE;
+    end
+  else 
+      begin
+        period <= n;
+      end 
+ end
 //----------------------------------------------------------------------------------------
-
-
-
-
 
 
 //-------------------------- number for counter -----------------------------------------------------------------------------------  
@@ -160,7 +141,7 @@ always@(posedge clk)
   begin
   if(d_v)
     begin
-      number<=n;  // assign value to number
+      number<=period;  // assign value to number
     end
   end  
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -187,27 +168,48 @@ begin
 
       if (drv_count>0 && drv_count<=(number+1) >>2)	// form lasting of pulse
 		             begin
-		               drv_step<=1;
+		               step<=1;
 	              	end
 	            else 
 		             begin
-		               drv_step<=0;
+		               step<=0;
 		             end
+
+      if (rst)
+        begin
+          drv_invert_step<=0;
+        end
+      else
+        begin
+          drv_invert_step<=!step;
+        end  
+
 end
 //------------------------------------------------------------------------------------------------------------------------------	 
 
-
-//---------------------------- invert step ---------------------------------------------------
 always @(posedge clk)
 begin
-  if (rst)
+  if (start_N)
     begin
-      drv_invert_step<=0;
+      drv_step <= ;
     end
   else
     begin
-      drv_invert_step<=!drv_step;
-    end  
+      drv_step <= step;
+    end
+end      
+
+//---------------------------- выходной сигнал  ---------------------------------------------------
+always @(posedge clk)
+begin
+  if (invert_pulse==1)
+    begin
+      drv_pulse <=drv_invert_step;
+    end
+  else  
+    begin
+      drv_pulse <=drv_step;
+    end
 end
 //----------------------------------------------------------------------------------------------------------------------------------------
 
