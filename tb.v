@@ -24,6 +24,12 @@ integer      x0=5,
 
 integer      k;        // factor of incline               // value is set
 
+reg          stop=0,
+             start=0,
+             start_N=0,
+             avto=1;
+
+reg          invert_pulse=1;             
 
 //--------------------------- find k --------------------------------------------------------------------------
 initial
@@ -161,7 +167,11 @@ TR_pulse TR_pulse_test
   .d_v                (d_v), 
   .drv_step           (drv_step),
   .drv_en_SM          (abc),
-  .n     	            (period)
+  .n     	            (period),
+  .stop               (stop),
+  .start              (start),
+  .start_N            (start_N),
+  .avto               (avto)
 );
 //----------------------------------------------------------------------------------------------------------------------------
 

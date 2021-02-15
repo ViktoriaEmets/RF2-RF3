@@ -20,44 +20,49 @@ module TR_pulse
 
 
     //---------------- порт ---------------------------------------------------------
-    input               invert_pulse = 1, // если invert_pulse=1, то на выход подавать инвертированные импульсы
+    input               invert_pulse, // если invert_pulse=1, то на выход подавать инвертированные импульсы
     //-------------------------------------------------------------------------------
 
 
     //-------------- команды -------------------------------------------------------
     input               stop,
                         start,
-                        start_N,
+                       // start_N,
                         avto
     //--------------------------------------------------------------------------------------   
-
   );
 
 reg [SIZE-1:0]          number,        // counter of pulse
-                        period,
+                        period_AUTO,
                         count_N,
                         drv_count;
-reg                     drv_invert_step;
-                        step;
-                        step_N;
+
+reg                     drv_invert_step,
+                        step,
+                        step_N,
                         drv_step;        
 
 reg [3:0]          regime;
 
 localparam
-  IDLE    = 3'b0001,
-  MOVE    = 3'b0010,
-  MOVE_N  = 3'b0100,
-  AUTO    = 3'b1000;
+  IDLE    = 1,
+  MOVE    = 2,
+  MOVE_N  = 3,
+  AUTO    = 4;
 
 //------------------------------------------------------------------------------------
 always@(posedge clk)
 begin
 case(regime)
- //------------ переключение между состояниями --------------
+ //------------ переключение между состояниями --------------------------------------
  IDLE:
  begin
-  if(start)
+  if (avto)
+    begin
+      regime<=AUTO;
+    end  
+
+  else if(start)
       begin
         regime<=MOVE;     	           
       end 
@@ -67,15 +72,22 @@ case(regime)
       regime<=MOVE_N;
     end
 
-  else if (avto)
-    begin
-      regime<=AUTO;
-    end  
-
   else 
     begin
       regime<=IDLE;
     end  
+ end
+
+AUTO:
+ begin
+  if (!avto)
+    begin
+      regime <= IDLE;
+    end
+  else 
+      begin
+        period_AUTO <= n;
+      end 
  end
 
 MOVE:
@@ -86,7 +98,7 @@ MOVE:
     end
   else 
       begin
-        period <=NUM_PERIOD;
+        period_AUTO <=NUM_PERIOD;
       end 
 
      /* begin
@@ -103,36 +115,35 @@ MOVE:
 
  MOVE_N:
  begin
-  if (count_N==0)
+  if (count_N==0 || stop==1)
     begin
       regime<=IDLE;
     end
+  //------------------------ где-то тут должна быть ошибка---------------------  
+  // кроме этого смотри связь с основным счетчиком
+  // сделать один счетчик 
   else 
     begin
       if (count_N >= N)
 	       begin
 		       count_N <= count_N-1;   
-           step_N <=0;          
+           step_N <=1;          
 	       end 
        else 
 	       begin
-		        count_N<=1;
-            step_N <=1;
+		        count_N<=0;
+            step_N <=0;
          end
     end
+  //--------------------------------------------------------------------------------  
  end
 
- AUTO:
- begin
-  if (!avto)
-    begin
+ 
+
+default:
       regime <= IDLE;
-    end
-  else 
-      begin
-        period <= n;
-      end 
- end
+endcase 
+end
 //----------------------------------------------------------------------------------------
 
 
@@ -141,7 +152,7 @@ always@(posedge clk)
   begin
   if(d_v)
     begin
-      number<=period;  // assign value to number
+      number<=period_AUTO;  // assign value to number
     end
   end  
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -191,7 +202,7 @@ always @(posedge clk)
 begin
   if (start_N)
     begin
-      drv_step <= ;
+      drv_step <= step_N;
     end
   else
     begin
