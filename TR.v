@@ -29,7 +29,7 @@ output reg [WIDTH_WORK-1:0]    n, 			  // after d-trigger (write or not data)
 
 output reg                     drv_step,      // pulse for SM
                        		   drv_dir,       // direction 
-                       		   drv_enable_SM  // inner signal, enable work SM
+                       		   drv_en_SM  // inner signal, enable work SM
 );
 
 reg [WIDTH_WORK-1:0]    	   dx,            // dx=x-x0
@@ -57,7 +57,7 @@ case(state)
     if(tr_mode_enable==1)
       begin
         state<=TO_ZERO;     	           
-        drv_enable_SM <= 1;
+        drv_en_SM <= 1;
       end 
     else begin
       state<=STARTING;
@@ -73,7 +73,7 @@ case(state)
      else if(dx==0)
           begin
             state<=LEAVING_DZ;               
-            drv_enable_SM <= 0;
+            drv_en_SM <= 0;
           end 
    end
   
@@ -86,7 +86,7 @@ case(state)
      else if (dx>=DEADZONE)
           begin
             state<=TO_ZERO;             
-            drv_enable_SM <= 1;
+            drv_en_SM <= 1;
           end 
    end    
 
