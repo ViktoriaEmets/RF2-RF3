@@ -150,7 +150,7 @@ TR TR_test
   .dx2                (dx2),  
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
-  .drv_en_SM      (abc),
+  .drv_en_SM          (abc),
   .n      	          (period),
   .k      	          (k),
   .F2                 (F2),

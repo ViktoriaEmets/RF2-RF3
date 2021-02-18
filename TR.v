@@ -27,8 +27,7 @@ input [WIDTH_WORK-1:0]  	   x,              // ADC
 
 output reg [WIDTH_WORK-1:0]    n, 			  // after d-trigger (write or not data)  
 
-output reg                     drv_step,      // pulse for SM
-                       		   drv_dir,       // direction 
+output reg                     drv_dir,       // direction 
                        		   drv_en_SM  // inner signal, enable work SM
 );
 
