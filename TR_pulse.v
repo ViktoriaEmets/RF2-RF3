@@ -16,10 +16,6 @@ module TR_pulse
 
     input               drv_en_SM,     // work SM, разрешение работы ШД внешнее
     input [SIZE-1:0]    n,             // period for filling with pulse
-
-
-
-  reg [31:0]              cr          // control reg КАК СДЕЛАТЬ??? ТУТ ЛИ ОН ДОЛЖЕН БЫТЬ?
   );
 
 reg [SIZE-1:0]          number,        // counter of pulse
@@ -30,16 +26,25 @@ reg [SIZE-1:0]          number,        // counter of pulse
 
 reg                     step,         // регистр для предоконечного значения импульсов (после общего счетчика)
                         step_N,       // регистр для N импульсов (НУЖЕН ЛИ ОН?)
+                        pulse_enable,        //  
                         cnt_en;       // разрешение работы ШД
-                        
 
-//-------------- команды (КАК ИХ ПРАВИЛЬНО ЗАПИСАТЬ ?)-------------------------------------------------------------------------------
-   reg                  start     = cr[0],
+wire                    start,
+                        start_N,
+                        stop,
+                        avto,
+                        invert_pulse;        
+
+reg [31:0]              cr           // control reg 
+
+
+ //-------------- команды -------------------------------------------------------------------------------
+assign                  start     = cr[0],
                         start_N   = cr[1],
                         stop      = cr[2],
                         avto      = cr[3],
                         invert_pulse = cr[5]; // инвертировать импульсы 
-//------------------------------------------------------------------------------------------------------  
+//------------------------------------------------------------------------------------------------------                         
 
 reg [3:0]               State=0;
 reg [3:0]               NextState;
@@ -58,6 +63,14 @@ begin
     State <= IDLE;
   else
     State <= NextState;
+end
+
+always @(posedge clk)
+begin
+  if(start)
+    pulse_enable <=1;
+  else if (stop)
+    pulse_enable <=0;
 end
 
 
@@ -129,7 +142,6 @@ always @(posedge clk)
 begin
     if(rst)
       begin
-        
         cnt_en      <= 0;
         period_AUTO <= 0;
       end
@@ -141,32 +153,28 @@ begin
          
           IDLE: 
             begin    
-              
               cnt_en      <= 0;
               period_AUTO <= 0;
             end
 
           AUTO: 
-            begin    
-              
+            begin  
               cnt_en      <= drv_en_SM;
               period_AUTO <= n;
             end  
 
           MOVE: 
-            begin    
-              
+            begin   
               cnt_en      <= 1;
               period_AUTO <= NUM_PERIOD;
             end  
 
           MOVE_N: 
             begin    
-              
               cnt_en      <= 1;
               period_AUTO <= NUM_PERIOD;
-              
-            end  
+            end 
+
         endcase     
       end       
 end
@@ -196,11 +204,13 @@ begin
         begin
           if (drv_count<=number+1)
 	          begin
-                  drv_count<=drv_count+1;             
+                  drv_count<=drv_count+1; 
+                  p<=1;            
 	          end 
           else 
 	          begin
 		          drv_count<=0;
+              p<=0;
 		        end 
 	      end
 //--------------------------------------------------------------------------------------------------
@@ -216,9 +226,9 @@ begin
 		        step<=0;
 		      end
 
-if (cnt_en)
+if (pulse_enable)
 begin
-  if() // что должно юыть?
+  if(p<=0) // что должно юыть?
     begin
       count_N <= 0;
     end
