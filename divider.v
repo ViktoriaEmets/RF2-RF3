@@ -150,7 +150,11 @@ begin
 		      end
 
 // ???????????? N ?????????
-if (start_N && pulse_width)
+if(rst || !start_N)
+  begin
+   count <= 0;
+  end   
+else 
     begin  
       if(count <= number && count > 0)
         begin
@@ -161,7 +165,8 @@ if (start_N && pulse_width)
          count <= number;
         end 
     end   
-else if (count > 0 && count<= N >> 2)	// form lasting of pulse
+ 
+if (!pulse_width || count > 0 && count<= (number-N) >> 2)	// form lasting of pulse
 		      begin
 		        step_N <= 1;
 	        end

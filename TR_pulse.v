@@ -7,6 +7,7 @@ module TR_pulse
   
   (
     output reg          drv_pulse,     // pulse for SM
+
     //----------- input control signals ---------------------------------------------------------------------
     input               clk,           // 50 MHz
                         rst,           // reset
@@ -145,11 +146,12 @@ end
 
 // чтобы значение выхода изменялось вместе с изменением состояния, а не на следующем такте, 
 // анализируем NextState
-always @(posedge clk)
+// FIX асинхронная логика  = мудьтиплексор весь модуль 
+always @(*)
 begin
     if(rst)
       begin
-        cnt_en      <= 0;
+        cnt_en      = 0;
       end
     else
       begin
@@ -158,22 +160,22 @@ begin
          
           IDLE: 
             begin    
-              cnt_en      <= 0;
+              cnt_en      = 0;
             end
 
           AUTO: 
             begin  
-              cnt_en      <= drv_en_SM;
+              cnt_en      = drv_en_SM;
             end  
 
           MOVE: 
             begin   
-              cnt_en      <= pulse_enable;
+              cnt_en      = pulse_enable;
             end  
 
           MOVE_N: 
             begin    
-              cnt_en      <= pulse_enable;
+              cnt_en      = pulse_enable;
             end 
 
         endcase     
@@ -182,6 +184,7 @@ end
 //-------------------------------------------------------------------------------------
 
 //------------------- мультиплексор --------------------------------------------
+// FIX замени авто на переменную зависящую от режима 
 always @(*)
 begin
   period_AUTO = avto ? n : NUM_PERIOD; // если avto=1, period_AUTO=n
@@ -207,7 +210,6 @@ end
 // счетчик 
 always @(posedge clk)
 begin
-  begin
   if (rst || !cnt_en)
     begin
       drv_count<=0;
@@ -225,7 +227,7 @@ begin
 		        end 
 
 //  формирование импульсов и их длительности 
-  else if (drv_count>0 && drv_count<=(number+1) >> 2)	// form lasting of pulse
+ if (drv_count>0 && drv_count<=(number+1) >> 2)	// form lasting of pulse
 		      begin
 		        step <= 1;
 	        end
@@ -243,7 +245,7 @@ if (start_N && pulse_width)
         end
       else
         begin
-         count_N <= 0;
+         count_N <= N;
         end 
     end   
 else if (count_N > 0 && count_N <= N >> 2)	// form lasting of pulse

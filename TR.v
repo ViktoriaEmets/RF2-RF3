@@ -10,6 +10,11 @@ parameter  L               = 16
 )
 
 (
+output reg [WIDTH_WORK-1:0]    n, 			  // after d-trigger (write or not data)  
+
+output reg                     drv_dir,       // direction 
+                       		   drv_en_SM,  // inner signal, enable work SM	
+
 //----------- input control signals ------------------------------------------
 input wire          		   clk,            // 50 MHz
                    	 		   data_valid,     // from ADC reading data
@@ -23,12 +28,7 @@ input [WIDTH_WORK-1:0]  	   x,              // ADC
 							   dx2,  
           					   F1,
 							   F2, 					
-							   k, 			  //[19:0]
-
-output reg [WIDTH_WORK-1:0]    n, 			  // after d-trigger (write or not data)  
-
-output reg                     drv_dir,       // direction 
-                       		   drv_en_SM  // inner signal, enable work SM
+							   k 			  //[19:0]
 );
 
 reg [WIDTH_WORK-1:0]    	   dx,            // dx=x-x0
