@@ -14,22 +14,24 @@ module TR_pulse
                         d_v,           // from ADC reading data(this signal has a delay 20 ns)
     //-------------------------------------------------------------------------------------------------------
     input               drv_en_SM,     // work SM, разрешение работы ШД внешнее
-    input [SIZE-1:0]    n,             // period for filling with pulse
+    input [SIZE-1:0]    n             // period for filling with pulse
   );
 
 reg [SIZE-1:0]          number,        // counter of pulse
                         period_AUTO,   // регистр для записи периода для авто/руч режимов
                         count_N,       // счетчик уже сформированных импульсов 
-                        drv_count;     // счетчик общий 
-                        drv_step
+                        drv_count,     // счетчик общий 
+                        drv_step;
 
 
-reg                     step,         // регистр для предоконечного значения импульсов (после общего счетчика)
+reg                     pulse_width,
+								        period,       // переменная зависящая от режима 
+                        step,         // регистр для предоконечного значения импульсов (после общего счетчика)
                         step_N,       // регистр для N импульсов (НУЖЕН ЛИ ОН?)
                         pulse_enable, // разрешение работы ШД внутреннее (по командам start/stop) 
-                        cnt_en;       // регистр разрешение работы ШД
+                        counter_en;   // регистр разрешение работы счетчика подсчета импульсов 
 
-reg [31:0]              control_reg           
+reg [31:0]              control_reg;           
 
 wire                    start,
                         start_N,
@@ -46,7 +48,7 @@ assign
 //------------------------------------------------------------------------------------------------------                         
 
 //---------------------- сигнал разрешения и прерывания импульсов -----------------
-always @(posedge clk) 
+/*always @(posedge clk) 
 begin
   if (rst)
         pulse_enable <= 1'b0;
@@ -58,7 +60,7 @@ begin
       if (stop)
         pulse_enable <=1'b0;
     end
-end    
+end  */  
 //----------------------------------------------------------------------------------------
 
 
@@ -129,7 +131,7 @@ begin
 
       MOVE_N:
         begin
-          if (count_N==0 || stop==1)  
+          if (count_N==N || stop==1)  // if (count_N == N) {count_done==1}
             begin
               NextState = IDLE;
             end
@@ -146,12 +148,11 @@ end
 
 // чтобы значение выхода изменялось вместе с изменением состояния, а не на следующем такте, 
 // анализируем NextState
-// FIX асинхронная логика  = мудьтиплексор весь модуль 
 always @(*)
 begin
     if(rst)
       begin
-        cnt_en      = 0;
+        pulse_enable = 0;
       end
     else
       begin
@@ -160,37 +161,33 @@ begin
          
           IDLE: 
             begin    
-              cnt_en      = 0;
+              pulse_enable = 0;
             end
 
           AUTO: 
             begin  
-              cnt_en      = drv_en_SM;
+              pulse_enable = drv_en_SM;
+              period_AUTO  = n;
             end  
 
           MOVE: 
             begin   
-              cnt_en      = pulse_enable;
+              pulse_enable = 1'b1; // разрешение работы ШД 
+              counter_en   = 1'b0; // разрешение работы счетчика count_N
+              period_AUTO  = NUM_PERIOD;
             end  
 
           MOVE_N: 
             begin    
-              cnt_en      = pulse_enable;
+              pulse_enable = 1'b1; // разрешение работы ШД 
+              counter_en   = 1'b1; // разрешение работы счетчика count_N
+              period_AUTO  = NUM_PERIOD;
             end 
 
         endcase     
       end       
 end
 //-------------------------------------------------------------------------------------
-
-//------------------- мультиплексор --------------------------------------------
-// FIX замени авто на переменную зависящую от режима 
-always @(*)
-begin
-  period_AUTO = avto ? n : NUM_PERIOD; // если avto=1, period_AUTO=n
-                                       // если avto=0, period_AUTO=NUM_PERIOD
-end
-//----------------------------------------------------------------------------------------
 
 
 //-------------------------- number for counter -----------------------------------------------------------------------------------  
@@ -210,24 +207,21 @@ end
 // счетчик 
 always @(posedge clk)
 begin
-  if (rst || !cnt_en)
+  if (rst || pulse_enable == 0)
     begin
       drv_count<=0;
-      pulse_width <= 0;
     end
   else if (drv_count<=number+1)
 	          begin
-                  drv_count <= drv_count+1;    
-                  pulse_width <= 1;       
+              drv_count <= drv_count+1;        
 	          end 
           else 
 	          begin
 		          drv_count <= 0;
-              pulse_width <= 0; 
 		        end 
 
 //  формирование импульсов и их длительности 
- if (drv_count>0 && drv_count<=(number+1) >> 2)	// form lasting of pulse
+ if (drv_count>0 && drv_count<=(number+1) >> 2)	
 		      begin
 		        step <= 1;
 	        end
@@ -237,39 +231,24 @@ begin
 		      end
 
 // формирование N импульсов
-if (start_N && pulse_width)
+  if (counter_en)
     begin  
-      if(count_N <= N && count_N > 0)
+      if(count_N <= N - 1)
         begin
-          count_N <= count_N -1;
+          count_N <= count_N + 1;
         end
       else
         begin
-         count_N <= N;
+         count_N <= 0;
         end 
     end   
-else if (count_N > 0 && count_N <= N >> 2)	// form lasting of pulse
-		      begin
-		        step_N <= 1;
-	        end
-	      else 
-		      begin
-		        step_N <= 0;
-		      end
-
 
 end            
-//---------------------------------------------------------------------------------------------------  
-
-always @(*)
-begin
-  drv_step = start_N ? step_N : step; // если start_N=1, drv_step=step_N 
-                                       // если start_N=0, drv_step=step
-end
+//-------------------------------------------------------------------------------------------------
 
 //---------------------------- выходной сигнал  ---------------------------------------------------
-assign
- drv_pulse <= drv_step^control_reg[5]; // юит определяет прямой сигнал или инвертированный 
+//assign
+// drv_pulse = drv_step^control_reg[5]; // юит определяет прямой сигнал или инвертированный 
 
 
 endmodule
