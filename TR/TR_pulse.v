@@ -13,56 +13,97 @@ module TR_pulse
                         rst,           // reset
                         d_v,           // from ADC reading data(this signal has a delay 20 ns)
     //-------------------------------------------------------------------------------------------------------
+    
+
+    //---------------------------------------------------------------------------------
+    input  wire [16:0] avs_s0_address,    // avalon_slave.address
+    
+    input  wire [31:0] avs_s0_writedata, //             .writedata
+    output reg  [31:0] avs_s0_readdata,  //             .readdata
+
+    input  wire        avs_s0_write,     //             .write
+		input  wire        avs_s0_read,      //             .read 
+    //----------------------------------------------------------------------------------
+
+
     input               drv_en_SM,     // work SM, разрешение работы ШД внешнее
     input [SIZE-1:0]    n             // period for filling with pulse
   );
 
-reg [SIZE-1:0]          number,        // counter of pulse
-                        period_AUTO,   // регистр для записи периода для авто/руч режимов
-                        count_N,       // счетчик уже сформированных импульсов 
-                        drv_count,     // счетчик общий 
-                        drv_step;
-
-
-reg                     pulse_width,
-								        period,       // переменная зависящая от режима 
-                        step,         // регистр для предоконечного значения импульсов (после общего счетчика)
-                        step_N,       // регистр для N импульсов (НУЖЕН ЛИ ОН?)
-                        pulse_enable, // разрешение работы ШД внутреннее (по командам start/stop) 
-                        counter_en;   // регистр разрешение работы счетчика подсчета импульсов 
-
-reg [31:0]              control_reg;           
+reg [31:0]              control_reg,           
+                        status_reg;
 
 wire                    start,
                         start_N,
                         stop,
                         avto,
-                        invert_pulse;        
+                        invert_pulse;   
+
+reg                              write_addr_err;
+
 //-------------- команды -------------------------------------------------------------------------------
 assign                  
   start     = control_reg[0],
   start_N   = control_reg[1],
   stop      = control_reg[2],
   avto      = control_reg[3],
-  invert_pulse = control_reg[5]; // инвертировать импульсы                    
+  invert_pulse = control_reg[4]; // инвертировать импульсы                    
 //------------------------------------------------------------------------------------------------------                         
 
-//---------------------- сигнал разрешения и прерывания импульсов -----------------
-/*always @(posedge clk) 
-begin
-  if (rst)
-        pulse_enable <= 1'b0;
-  else
+
+always @(posedge clk)
     begin
-      if (start)
-        pulse_enable <=1'b1;
+      control_reg[0] <= 1'b0;
+      control_reg[1] <= 1'b0;
+      control_reg[2] <= 1'b0;
+      control_reg[3] <= 1'b0;
+      control_reg[4] <= 1'b0;
 
-      if (stop)
-        pulse_enable <=1'b0;
-    end
-end  */  
-//----------------------------------------------------------------------------------------
+      if (rst)
+        begin
+          write_addr_err <= 1'b0;
+        end
+      else
+      // ------------------------ не понимаю что именно нужно сделать -----------------------
+       /* if (avs_s0_write)
+          begin
+            case (avs_s0_address)
+                16'h0:  start <= avs_s0_writedata;
+                16'h1:  start_N <= avs_s0_writedata; 
+                16'h2:  stop <= avs_s0_writedata;
+                16'h3:  avto <= avs_s0_writedata;
+                16'h4:  invert_pulse <= avs_s0_writedata;
+                default:
+                  write_addr_err <= 1'b1;
+            endcase // case (avs_s0_address)
+          end
+        else
+          if (avs_s0_read)
+            begin
+				      case (avs_s0_address)
+                 16'h0:   avs_s0_readdata <= start;
+                 16'h1:   avs_s0_readdata <= start_N;
+                 16'h2:   avs_s0_readdata <= stop;
+                 16'h3:   avs_s0_readdata <= avto;
+                 16'h4:   avs_s0_readdata <= invert_pulse;
+                default:
+                  avs_s0_readdata <= 32'b0;
+              endcase
+            end    
+            */
+            //---------------------------------------------------------------------------------
+    end  
 
+
+reg [SIZE-1:0]          number,        // counter of pulse
+                        period_AUTO,   // регистр для записи периода для авто/руч режимов
+                        drv_count,     // счетчик общий 
+                        count_N,       // счетчик уже сформированных импульсоВ
+                        drv_step;
+
+reg                     step,         // регистр для предоконечного значения импульсов (после общего счетчика)
+                        pulse_enable, // разрешение работы ШД внутреннее (по командам start/stop) 
+                        counter_en;   // регистр разрешение работы счетчика подсчета импульсов 
 
 reg [3:0]               State=0;
 reg [3:0]               NextState;
@@ -85,53 +126,46 @@ end
  // по умолчанию сохраняем текущее состояние 
 always @(*)
 begin
- 
     NextState = State;
     case (State)
 
       IDLE: 
         begin
-          if(avto) 
-            begin
+          if(avto)
               NextState = AUTO;
-            end
-          else if(start) 
+          else
             begin
-              NextState = MOVE;
+              if(start) 
+                NextState = MOVE;
+              else  
+                begin
+                  if(start_N) 
+                    NextState = MOVE_N;
+                  else
+                    NextState = IDLE;
+                end
             end
-          else if(start_N) 
-            begin
-              NextState = MOVE_N;
-            end  
         end
 
       AUTO:
         begin
           if (!avto)
-            begin
               NextState = IDLE;
-            end
           else
-            begin
-              NextState = AUTO;
-            end  
+              NextState = AUTO; 
         end
 
       MOVE:
         begin
           if (stop)
-            begin
-              NextState = IDLE;
-            end
+            NextState = IDLE;
           else
-            begin
-              NextState = MOVE;
-            end  
+            NextState = MOVE;
         end
 
       MOVE_N:
         begin
-          if (count_N==N || stop==1)  // if (count_N == N) {count_done==1}
+          if (count_N == N || stop)  
             begin
               NextState = IDLE;
             end
@@ -161,13 +195,15 @@ begin
          
           IDLE: 
             begin    
-              pulse_enable = 0;
+              pulse_enable = 1'b0;
+              counter_en   = 1'b0;
             end
 
           AUTO: 
             begin  
               pulse_enable = drv_en_SM;
               period_AUTO  = n;
+              counter_en   = 1'b0;
             end  
 
           MOVE: 
@@ -211,44 +247,41 @@ begin
     begin
       drv_count<=0;
     end
-  else if (drv_count<=number+1)
-	          begin
-              drv_count <= drv_count+1;        
-	          end 
-          else 
-	          begin
-		          drv_count <= 0;
-		        end 
+  else 
+    begin
+      if (drv_count <= number + 1)
+          drv_count <= drv_count + 1; 
+      else 
+		      drv_count <= 0;
+		end 
 
 //  формирование импульсов и их длительности 
- if (drv_count>0 && drv_count<=(number+1) >> 2)	
-		      begin
-		        step <= 1;
-	        end
-	      else 
-		      begin
-		        step <= 0;
-		      end
+  if (drv_count > 0 && drv_count <= (number + 1) >> 2)	
+		step <= 1;
+  else 
+		step <= 0;
 
 // формирование N импульсов
   if (counter_en)
     begin  
-      if(count_N <= N - 1)
-        begin
+    if (drv_count == 1)
+      begin
+      if (count_N <= N - 1)
           count_N <= count_N + 1;
+      else
+          count_N <= 0;
+      end
         end
       else
         begin
-         count_N <= 0;
-        end 
-    end   
-
-end            
+          count_N <= 1'b0;
+        end
+    end       
 //-------------------------------------------------------------------------------------------------
 
 //---------------------------- выходной сигнал  ---------------------------------------------------
 //assign
-// drv_pulse = drv_step^control_reg[5]; // юит определяет прямой сигнал или инвертированный 
+// drv_pulse = drv_step ^ pulse_invert; // юит определяет прямой сигнал или инвертированный 
 
 
 endmodule
