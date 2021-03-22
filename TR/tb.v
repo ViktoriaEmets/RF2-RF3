@@ -13,6 +13,11 @@ wire         abc;      // wire for connection TR and TR_pulse - drv_enable_SM
 
 wire [16:0]  period;   // wire for connection TR and TR_pulse - N
 
+wire         stop_conn,
+             start_conn,
+             start_N_conn,
+             pulse_invert_conn;
+
 parameter    F=20000;  // limit for x
 
 integer      x0=5,
@@ -24,12 +29,12 @@ integer      x0=5,
 
 integer      k;        // factor of incline               // value is set
 
-reg          stop=0,
-             start=0,
-             start_N=0,
-             avto=1;
+reg          stop,
+             start,
+             start_N,
+             avto;
 
-reg          invert_pulse=1;             
+reg          invert_pulse;             
 
 //--------------------------- find k --------------------------------------------------------------------------
 initial
@@ -137,6 +142,22 @@ endtask
 //----------------------------------------------------------------------------------------------------------------------------
 
 
+//--------------------------------------------------------------------------------------------------------------
+initial
+begin
+  avs_s0_write =0;
+  #30000 avs_s0_write=1;
+  #50000 avs_s0_write=0;
+end
+
+
+initial
+begin
+  avs_s0_read =0;
+  #70000 avs_s0_read=1;
+  #50000 avs_s0_read=0;
+end
+
 //----------------------------------------------------------------------------------------------------------------------------
 TR TR_test
 (
@@ -144,14 +165,18 @@ TR TR_test
   .data_valid         (data_valid), 
   .tr_mode_enable     (tr_mode_enable), 
   .rst                (rst), 
+
   .x                  (x), 
   .x0                 (x0),
   .dx1                (dx1), 
   .dx2                (dx2),  
+
   .drv_step           (drv_step), 
   .drv_dir            (drv_dir),  
+
   .drv_en_SM          (abc),
   .n      	          (period),
+
   .k      	          (k),
   .F2                 (F2),
   .F1                 (F1)
@@ -165,14 +190,37 @@ TR_pulse TR_pulse_test
   .clk                (clk_50MHz), 
   .rst                (rst), 
   .d_v                (d_v), 
+
   .drv_step           (drv_step),
+
   .drv_en_SM          (abc),
   .n     	            (period),
-  .stop               (stop),
-  .start              (start),
-  .start_N            (start_N),
+
+  .stop               (stop_conn),
+  .start              (start_conn),
+  .start_N            (start_N_conn),
+  .pulse_invert       (pulse_invert_conn),
   .avto               (avto)
 );
 //----------------------------------------------------------------------------------------------------------------------------
+
+
+//-------------------------------------------------------------------------------------------------
+avalon avalon_test
+(
+  .clk                (clk_50MHz), 
+  .rst                (rst),
+
+  .avs_s0_writedata   (avs_s0_writedata),
+  .avs_s0_write       (avs_s0_write),
+  .avs_s0_read        (avs_s0_read),
+
+  .avs_s0_readdata    (avs_s0_readdata),
+
+  .stop               (stop_conn),
+  .start              (start_conn),
+  .start_N            (start_N_conn),
+  .pulse_invert       (pulse_invert_conn)
+);
 
 endmodule

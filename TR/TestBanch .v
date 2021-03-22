@@ -4,10 +4,23 @@ reg           clk_50MHz,
               rst,
               counter_en;
 
+reg           avs_s0_writedata,
+              avs_s0_write,
+              avs_s0_read;    
+
+reg           avs_s0_address = 1'b1111;
+
+
+
 reg           start,
               start_N,
               stop,
+             
               avto;
+
+wire         stop_conn,
+             start_conn,
+             start_N_conn;
 
 initial
 begin
@@ -29,7 +42,7 @@ begin
   #100000 avto=1;
   #10 avto=0;
 end
-
+/*
 initial
 begin
   start=0;
@@ -52,13 +65,51 @@ begin
   #900000 stop=1;
   #10 stop=0;
 end
+*/
 
-TR_P TR_P_test1(
-.clk      (clk_50MHz), 
-.rst      (rst), 
-.start_N  (start_N), 
-.start    (start),
-.stop     (stop),
-.avto     (avto)
+initial
+begin
+  avs_s0_write =0;
+  #600000 avs_s0_write=1;
+  #50000 avs_s0_write=0;
+end
+
+
+initial
+begin
+  avs_s0_read =0;
+  #900000 avs_s0_read=1;
+  #50000 avs_s0_read=0;
+end
+
+TR_P TR_P_test1
+(
+  .clk                (clk_50MHz), 
+  .rst                (rst), 
+
+  .stop               (stop_conn),
+  .start              (start_conn),
+  .start_N            (start_N_conn),
+  
+  .avto               (avto)
+);
+
+//-------------------------------------------------------------------------------------------------
+avalon avalon_test
+(
+  .clk                (clk_50MHz), 
+  .rst                (rst),
+
+  .avs_s0_writedata   (avs_s0_writedata),
+  .avs_s0_address     (avs_s0_address),
+  .avs_s0_write       (avs_s0_write),
+  .avs_s0_read        (avs_s0_read),
+
+  .avs_s0_readdata    (avs_s0_readdata),
+
+  .stop               (stop_conn),
+  .start              (start_conn),
+  .start_N            (start_N_conn)
+ 
 );
 endmodule

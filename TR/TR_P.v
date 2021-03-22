@@ -28,7 +28,7 @@ reg                     counter_en;   // разрешение работы сч�
 
 reg                     count_done;
 
-reg starting; // сигнал для работы режима MOVE
+/*reg starting; // сигнал для работы режима MOVE
 always @(*) 
 begin
   if (rst)
@@ -56,7 +56,7 @@ begin
       if (stop)
         Ning <=0;
     end
-end  
+end  */
            
 reg [3:0]               State=0;
 reg [3:0]               NextState=0;

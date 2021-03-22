@@ -14,7 +14,7 @@ module TR_pulse
                         d_v,           // from ADC reading data(this signal has a delay 20 ns)
     //-------------------------------------------------------------------------------------------------------
     
-
+/*
     //---------------------------------------------------------------------------------
     input  wire [16:0] avs_s0_address,    // avalon_slave.address
     
@@ -24,24 +24,32 @@ module TR_pulse
     input  wire        avs_s0_write,     //             .write
 		input  wire        avs_s0_read,      //             .read 
     //----------------------------------------------------------------------------------
-
+*/
 
     input               drv_en_SM,     // work SM, разрешение работы ШД внешнее
     input [SIZE-1:0]    n             // period for filling with pulse
+
+
+
+    input wire                    start,
+                        start_N,
+                        stop,
+                        avto,
+                        invert_pulse;  
   );
 
 reg [31:0]              control_reg,           
                         status_reg;
 
-wire                    start,
+/*wire                    start,
                         start_N,
                         stop,
                         avto,
                         invert_pulse;   
+*/
+//reg                              write_addr_err;
 
-reg                              write_addr_err;
-
-//-------------- команды -------------------------------------------------------------------------------
+/*//-------------- команды -------------------------------------------------------------------------------
 assign                  
   start     = control_reg[0],
   start_N   = control_reg[1],
@@ -93,7 +101,7 @@ always @(posedge clk)
             */
             //---------------------------------------------------------------------------------
     end  
-
+*/
 
 reg [SIZE-1:0]          number,        // counter of pulse
                         period_AUTO,   // регистр для записи периода для авто/руч режимов
