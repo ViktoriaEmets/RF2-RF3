@@ -3,56 +3,117 @@ module avalon
 	input  wire        clk,              
     input  wire        rst,              
 
-	input  wire [3:0] avs_s0_address,   
-	input  wire [7:0] avs_s0_writedata, 
+	input  wire [31:0]  avs_s0_address,   
+	input  wire [7:0]  avs_s0_writedata, 
 
-	output reg [7:0] avs_s0_readdata,  
+	output reg [7:0]   avs_s0_readdata,  
 
 	input  wire        avs_s0_write,     
 	input  wire        avs_s0_read,     
 
+     output reg      q,
 
-     output reg       start,
-                      stop,
-                      start_N
-                      //pulse_invert 
+     output reg      start_comm,
+                     stop_comm,
+                     start_N_comm,
+                     pulse_invert_comm 
 	           
 );
-reg [31:0]            control_reg;
+reg [31:0]           control_reg;
 
-assign avs_s0_writedata = avs_s0_address;
+reg                  write_addr_err;
 
-/*assign
-    start           = control_reg[0],
-    stop            = control_reg[1], 
-    start_N         = control_reg[2],
-    pulse_invert    = control_reg[3];
+reg                  start,
+                     stop,
+                     start_N,
+                     pulse_invert; 
+
+/*assign               start = control_reg[0],
+                     stop = control_reg[1], 
+                     start_N = control_reg[2],
+                     pulse_invert  = control_reg[3];
 */
+
+
 always @(posedge clk)
     begin
-      control_reg[0] <= 1'b0;
-      control_reg[1] <= 1'b0;
-      control_reg[2] <= 1'b0;
-     // control_reg[3] <= 1'b0;
-
+    if (rst)
+        begin
+          write_addr_err <= 1'b0;
+        end
+    else
         if (avs_s0_write)
             begin
-                control_reg <= avs_s0_writedata;
+               case (avs_s0_address)
+                    2'h0: control_reg <= avs_s0_writedata;
+                default:
+                    write_addr_err <= 1'b1;
+               endcase 
             end
 
-        if (avs_s0_read)
+    else
+          if (avs_s0_read)
             begin
-                avs_s0_readdata <= control_reg;     
+			   case (avs_s0_address)
+                    2'h0: avs_s0_readdata <= control_reg; 
+                default:
+                    avs_s0_readdata <= 32'b0;
+               endcase
             end
+           
     end
+
 
 always @(posedge clk)
 begin
-    start           = control_reg[0];
-    stop            = control_reg[1]; 
-    start_N         = control_reg[2];
-    //pulse_invert    = control_reg[3];
- 
+    q <= 1'b0;
+    if (avs_s0_write)
+    begin
+        q <= 1'b1;
+     end   
 end
+
+
+always @(posedge q)
+begin
+   
+start          = control_reg[0];
+stop           = control_reg[1]; 
+start_N        = control_reg[2];
+pulse_invert   = control_reg[3];
+
+  /* if (start == 1'b1) begin
+        start_comm <= 1'b1;
+     end
+   else begin
+        start_comm <= 1'b0; 
+        end
+
+   if (stop == 1'b1) begin
+        stop_comm <= 1'b1; 
+     end
+   else begin
+        stop_comm <= 1'b0; 
+        end
+
+
+   if (start_N == 1'b1) begin
+        start_N_comm <= 1'b1; 
+        end
+   else begin
+        start_N_comm <= 1'b0; 
+        end
+
+
+   if (pulse_invert == 1'b1) begin
+        pulse_invert_comm <= 1'b1; 
+        end
+   else begin
+        pulse_invert_comm <= 1'b0;   
+        end   
+*/
+
+end
+
 
 endmodule
