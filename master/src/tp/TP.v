@@ -6,7 +6,7 @@ module TP  // Режим TP, настройка по фазометру
     output reg                          drv_en_TP,
                                         dir_TP,
 
-    output reg [WIDTH_TP-1:0]           period_TP,                             
+    output reg [2*WIDTH_TP-1:0]           period_TP,                             
 
     input wire                          clk,
                                         rst,
@@ -124,8 +124,8 @@ always @(posedge clk)
 //---------------период изменение -----------------------------------------------------------------------
 always @(posedge clk)
     begin
- //       if (fi_phm == 70)
- //           begin
+       if (fi_phm == 70)
+          begin
                 if (d_fi > d_fi_gate2)
                     begin
                         n_TP <= F2;
@@ -134,11 +134,11 @@ always @(posedge clk)
 		            begin                           
 			            n_TP <= ((k_TP * (d_fi - DZ_TP)) / L) + F1;
 		            end	
-//            end
-//	    else 
-//		    begin                                
-//			    n_TP <= 0;
-//		    end		
+        end
+   else 
+		    begin                                
+			    n_TP <= 0;
+		    end		
     end   
 
 always@(posedge data_valid_TP or posedge rst)  //cheak a condition

@@ -3,20 +3,27 @@ module PULSE    // Модуль формирования импульсов в �
     parameter WIDTH = 16
 )
 (
-    output                          drv_pulse,
-    output reg                      drv_dir,
+    output [2*WIDTH-1:0]            drv_pulse,
+   
 
     
     input                           clk,
-                                    rst,                          
+                                    rst, 
+
+                                    drv_dir,
+                                    enable,
+                                    counter_en,
+
+    input [2*WIDTH-1:0]             drv_period,
+                                    PULSE_NUMBER
+                                                                                
 );
 
 reg                                 pulse_invert,
                                     drv_step;
 
 reg [WIDTH-1:0]                     count_N,
-                                    drv_count,
-                                    drv_period;
+                                    drv_count;
                                            
 always @(posedge clk)
     begin

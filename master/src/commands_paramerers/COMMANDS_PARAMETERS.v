@@ -1,13 +1,22 @@
 module COMMANDS_PARAMETERS
+#(
+     parameter WIDTH_C_P = 16
+)
 (
     output reg                      start,         // непрерывное формирования импульсов, в TR_MANUAL
                                     start_N,       // формирования N импульсов, в TR_MANUAL 
                                     stop,          // выход в неопределенное состояние, в TR_MANUAL (нет импульсов вообще)
 
+                                    auto,
+
+                                    tr,
+                                    tx,
+                                    tp,
+
                                     dir_MANUAL,    // направление вращения, в TR
                                     count_MANUAL,  // разрешение работы счетчика уже сформированных импульсов, в TR
 
-    output  reg [WIDTH_TP-1:0]      F1,            // мин.частота работы станции, в TR_AUTO, TX, TP
+    output  reg [2*WIDTH_C_P-1:0]   F1,            // мин.частота работы станции, в TR_AUTO, TX, TP
                                     F2,            // макс.частота работы станции, в TR_AUTO, TX, TP
 
                                     L,             // для повышения точности изменения скорости, L=16, в TR_AUTO, TX, TP
@@ -27,6 +36,11 @@ module COMMANDS_PARAMETERS
 
     input                           clk,                    // 50 MHz
                                     rst,                    // reset
+                                    TURN_ON_RF,
+                                    syncpulse,
+
+    input [31:0]                    detuning, 
+                                    fi_phm,                               
 
     input wire [15:0]               avs_s0_address,        // ширина может быть 1-64
     input wire [31:0]               avs_s0_writedata,
@@ -37,7 +51,8 @@ module COMMANDS_PARAMETERS
    
     reg                                 write_addr_err;
     
-    reg [31:0]                          control_reg;
+    reg [31:0]                          control_reg,
+                                        mode_reg;
 
 always @(posedge clk)
     begin
@@ -45,6 +60,7 @@ always @(posedge clk)
         begin
           write_addr_err <= 1'b0;
           control_reg <= 0;
+         
         end
       else
         begin
@@ -78,6 +94,8 @@ always @(posedge clk)
             //--------------------- TP --------------------------    
                 16'hD: d_fi_gate2   <= avs_s0_writedata;
                 16'hE: DZ_TP        <= avs_s0_writedata;
+            //--------------------- TR --------------------------
+                16'hF: auto         <= avs_s0_writedata;   
 
                 default:
                   write_addr_err  <= 1'b1;
@@ -106,18 +124,52 @@ always @(posedge clk)
             //--------------------- TP --------------------------
                 16'hD: avs_s0_readdata <= d_fi_gate2;
                 16'hE: avs_s0_readdata <= DZ_TP; 
+            //---------------------- TR -------------------------
+                16'hF: avs_s0_readdata <= auto;   
 
                 default:
                     avs_s0_readdata <= 32'b0;
               endcase
             end
     end
+end
 
-    always @(*)
+always @(*)
     begin
       stop           = control_reg[0];
       start          = control_reg[1];
       start_N        = control_reg[2];
     end
+
+always @(*)
+begin
+      mode_reg[0] = 1'b0;
+      mode_reg[1] = 1'b0;
+      mode_reg[2] = 1'b0;
+
+    if (TURN_ON_RF) 
+    begin
+      mode_reg[0] = 1'b1;
+    end
+
+    if (syncpulse)
+    begin
+      mode_reg[1] = 1'b1;
+    end 
+
+    if (fi_phm == detuning)
+    begin
+      mode_reg[2] = 1'b1;
+    end 
+
+end  
+
+always @(*)
+begin
+      tr = mode_reg[0];
+      tx = mode_reg[1];
+      tp = mode_reg[2];
+end
+
 
 endmodule

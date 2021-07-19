@@ -6,7 +6,7 @@ module TX   // Режим TX, ограничение тока фидера
     output reg                          drv_en_TX,      // разрешение работы ШД в режиме TX
                                         dir_TX,         // направление вращения режим TX          
     
-    output reg [WIDTH_TX-1:0]           period_TX,      // период режимTX
+    output reg [2*WIDTH_TX-1:0]           period_TX,      // период режимTX
 
     input wire                          clk,            // тактовая частота 
                                         rst,            // сброс

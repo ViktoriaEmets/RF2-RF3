@@ -7,7 +7,7 @@ parameter  WIDTH_AUTO      			= 16   			// dx1,dx2,v1,v2,v,N,count
 output reg                      	enable_AUTO,   // разрешение работы ШД, в TR
 									dir_AUTO,	   // направление вращения ШД, в TR 
 
-output reg [WIDTH_AUTO-1:0]  		period_AUTO,   // период импульсов, в TR 
+output reg [2*WIDTH_AUTO-1:0]  		period_AUTO,   // период импульсов, в TR 
 
 input wire          		   		clk,            // 50 MHz
 									rst,            // reset
