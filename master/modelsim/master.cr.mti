@@ -12,12 +12,51 @@ Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
 Top level modules:
 	PULSE
 
-} {} {}} D:/quartus/master/modelsim/Test.v {1 {vlog -work work D:/quartus/master/modelsim/Test.v
+} {} {}} D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v {0 {vlog -work work D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
--- Compiling module Test
+-- Compiling module COMMANDS_PARAMETERS
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(16): (vlog-2730) Undefined variable: 'WIDTH_TP'.
+
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(16): 'F1' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(17): 'F2' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(19): 'L' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(22): 'period_MANUAL' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(23): 'PULSE_NUMBER' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(25): 'DZ_TR' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(26): 'DZ_TX' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(27): 'DZ_TP' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(29): 'dx1' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(30): 'dx2' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(31): 'd_i_gate2' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(32): 'd_fi_gate2' already declared in this scope (COMMANDS_PARAMETERS).
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(128): near "always": syntax error, unexpected always
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(141): (vlog-2730) Undefined variable: 'TURN_ON_RF'.
+
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(146): (vlog-2730) Undefined variable: 'syncpulse'.
+
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(151): (vlog-2730) Undefined variable: 'fi_phm'.
+
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(151): (vlog-2730) Undefined variable: 'detuning'.
+
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(16): Identifier must be declared with a port mode: F1.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(17): Identifier must be declared with a port mode: F2.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(19): Identifier must be declared with a port mode: L.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(22): Identifier must be declared with a port mode: period_MANUAL.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(23): Identifier must be declared with a port mode: PULSE_NUMBER.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(25): Identifier must be declared with a port mode: DZ_TR.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(26): Identifier must be declared with a port mode: DZ_TX.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(27): Identifier must be declared with a port mode: DZ_TP.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(29): Identifier must be declared with a port mode: dx1.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(30): Identifier must be declared with a port mode: dx2.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(31): Identifier must be declared with a port mode: d_i_gate2.
+** Error: D:/quartus/master/src/commands_paramerers/COMMANDS_PARAMETERS.v(32): Identifier must be declared with a port mode: d_fi_gate2.
+
+} {4.0 5.0 6.0 20.0 21.0 22.0 23.0 24.0 25.0 26.0 27.0 39.0} {}} D:/quartus/master/src/mux/MUX.v {1 {vlog -work work D:/quartus/master/src/mux/MUX.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module MUX
 
 Top level modules:
-	Test
+	MUX
 
 } {} {}} D:/quartus/master/src/tp/TP.v {1 {vlog -work work D:/quartus/master/src/tp/TP.v
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
@@ -26,12 +65,12 @@ Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
 Top level modules:
 	TP
 
-} {} {}} D:/quartus/master/src/tx/TX.v {1 {vlog -work work D:/quartus/master/src/tx/TX.v
+} {} {}} D:/quartus/master/src/tr/TR.v {1 {vlog -work work D:/quartus/master/src/tr/TR.v
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
--- Compiling module TX
+-- Compiling module TR
 
 Top level modules:
-	TX
+	TR
 
 } {} {}} D:/quartus/master/src/tr_auto/TR_AUTO.v {1 {vlog -work work D:/quartus/master/src/tr_auto/TR_AUTO.v
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
@@ -40,11 +79,11 @@ Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
 Top level modules:
 	TR_AUTO
 
-} {} {}} D:/quartus/master/src/tr/TR.v {1 {vlog -work work D:/quartus/master/src/tr/TR.v
+} {} {}} D:/quartus/master/src/tx/TX.v {1 {vlog -work work D:/quartus/master/src/tx/TX.v
 Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
--- Compiling module TR
+-- Compiling module TX
 
 Top level modules:
-	TR
+	TX
 
 } {} {}}

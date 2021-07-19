@@ -1,37 +1,44 @@
 `timescale 10ns/10ns  // Модуль для отладки в modelsim
 module Test();
  
-reg          clk_50MHz,
-             rst,
-             data_valid,
-        	    syncpulse,
-        	    tr_mode,
-        	    tx_mode,
-        	    tp_mode; 
-        	    
-integer      i_set = 50,
-             i_fid_TX = 100,
-        	    d_i_gate2 = 95,
-             DZ_TX = 25,
+reg         clk_50MHz,
+            rst,
              
-        	    fi_set = 70,
-        	    d_fi_gate2 = 65,
-        	    DZ_TP = 25,
-        	    detuning = 70;
+            data_valid_TR,
+            data_valid_TX,
+            data_valid_TP,
         	    
-        	      
+        	  tr_mode,
+        	  tx_mode, 
+        	  tp_mode; 
         	    
-integer      L = 16,
-             x_set = 35,
-             DZ_TR  = 100,
-        	    dx1 = 150,
-        	    dx2 = 400,
-        	    F1 = 6000,
-        	    F2 = 50000;
+        	    
+integer     //L = 16, 
+            //F1 = 6000,
+        	  //F2 = 50000,
+            L, F1, F2,
+             
+            x_set = 35,
+            //dx1 = 150,
+        	  //dx2 = 400,
+        	  //DZ_TR  = 170,
+            dx1, dx2, DZ_TR,
+        	    
+            i_set = 50,
+        	  //d_i_gate2 = 95,
+            //DZ_TX = 25,
+            d_i_gate2, DZ_TX,
+             
+        	  fi_set = 70,
+        	  //d_fi_gate2 =165,
+        	  //DZ_TP = 85,
+            d_fi_gate2, DZ_TP,
+        	  detuning = 70;
 
-wire [31:0]  L_conn,
+/*wire [31:0]  L_conn,
              F1_conn,
              F2_conn;   	    
+*/
         	    
 //--------------------------------- CLK -------------------------------------------------------------------------
 initial
@@ -42,7 +49,6 @@ begin
 end
 //--------------------------------------------------------------------------------------------------------------
 
-
 //----------------------- RST -----------------------------------------------------------------------------------
 initial
 begin
@@ -52,17 +58,46 @@ begin
 end
 //---------------------------------------------------------------------------------------------------------------
 
-
-//------------------------------ DATA_VALID ----------------------------------------------------------------------
+//------------------------------ DATA_VALID_TR ----------------------------------------------------------------------
 initial
 begin
-  data_valid=0;
+  data_valid_TR=0;
  forever
   begin
-      data_valid=0;
+      data_valid_TR=0;
     repeat(4)
     @(posedge clk_50MHz);
-      data_valid=1;
+      data_valid_TR=1;
+    @(posedge clk_50MHz);
+  end
+end
+//---------------------------------------------------------------------------------------------------------------
+
+//------------------------------ DATA_VALID_TX ----------------------------------------------------------------------
+initial
+begin
+  data_valid_TX=0;
+ forever
+  begin
+      data_valid_TX=0;
+    repeat(4)
+    @(posedge clk_50MHz);
+      data_valid_TX=1;
+    @(posedge clk_50MHz);
+  end
+end
+//---------------------------------------------------------------------------------------------------------------
+
+//------------------------------ DATA_VALID_TP ----------------------------------------------------------------------
+initial
+begin
+  data_valid_TP=0;
+ forever
+  begin
+      data_valid_TP=0;
+    repeat(4)
+    @(posedge clk_50MHz);
+      data_valid_TP=1;
     @(posedge clk_50MHz);
   end
 end
@@ -78,40 +113,6 @@ endtask
 //-------------------------------------------------------------------------------------------------------------
 
 
-//---------------------------------------- syncpulse -----------------------------------------------------------
-initial
-begin
-  syncpulse =0;
-  #170000 syncpulse=1;
-  #10 syncpulse=0;
-end
-//----------------------------------------------------------------------------------------------------------------
-
-
-//------------------------------ find k -----------------------------------------------------------------------------
-integer k_TR;
-initial
-begin
-  k_TR=((F2 - F1)/(dx2 - dx1)) * L;
-  $display("k_TR = %d", k_TR);
-end  
-//-----------------------------------------------
-integer k_TX;
-initial
-begin
-  k_TX=((F2 - F1)/(d_i_gate2 - DZ_TX)) * L;
-  $display("k_TX = %d", k_TX);
-end  
-//------------------------------------------------
-integer k_TP;
-initial
-begin
-  k_TP=((F2 - F1)/(d_fi_gate2 - DZ_TP)) * L;
-  $display("k_TP = %d", k_TP);
-end        	    
-//--------------------------------------------------------------------------------------------------------------- 
-
-
 //-------------------------- tr_mode ------------------------------------------------------------------------------------
 initial
 begin
@@ -120,29 +121,56 @@ begin
   #50000 tr_mode = 0;
   #20000 tr_mode = 1;
 end
-//--------------------------- tx_mode ------------------------
+//---------------------------- k_TR --------
+integer k_TR;
+initial
+begin
+  k_TR=((F2 - F1)/(dx2 - dx1)) * L;
+  $display("k_TR = %d", k_TR);
+end  
+//----------------------------------------------------------------------------------------------------------------------- 
+
+
+//--------------------------- tx_mode ------------------------------------------------------------------------------------
 initial
 begin
   tx_mode = 0;
-  #170000 tx_mode = 1;
-  #500000 tx_mode = 0;
-  #200000 tx_mode = 1;
+  #17000 tx_mode = 1;
+  #50000 tx_mode = 0;
+  #20000 tx_mode = 1;
 end
-//--------------------------- tp_mode --------------------------
+//---------------------------- k_TX --------
+integer k_TX;
+initial
+begin
+  k_TX=((F2 - F1)/(d_i_gate2 - DZ_TX)) * L;
+  $display("k_TX = %d", k_TX);
+end  
+//-------------------------------------------------------------------------------------------------------------------------
+
+
+//--------------------------- tp_mode ---------------------------------------------------------------------------------------
 initial
 begin
   tp_mode = 0;
-  #220000 tp_mode = 1;
-  #500000 tp_mode = 0;
-  #200000 tp_mode = 1;
+  #22000 tp_mode = 1;
+  #50000 tp_mode = 0;
+  #20000 tp_mode = 1;
 end
+//---------------------------- k_TP -----------
+integer k_TP;
+initial
+begin
+  k_TP=((F2 - F1)/(d_fi_gate2 - DZ_TP)) * L;
+  $display("k_TP = %d", k_TP);
+end        	    
 //--------------------------------------------------------------------------------------------------------------------------
 
 
 //----------------------------------- X --------------------------------------------------------------------------------
 parameter    F=450;
 reg [15:0]   x;
-always @(posedge data_valid)
+always @(posedge data_valid_TR)
 begin
         if (tr_mode == 0)
           begin
@@ -166,7 +194,16 @@ begin
 
 
 //----------------------------------- i_fid --------------------------------------------------------------------------------
-reg [15:0]   i_fid;
+reg syncpulse;
+
+initial
+begin
+  syncpulse =0;
+  #7100 syncpulse=1;
+  #3000 syncpulse=0;
+end
+
+reg [31:0]   i_fid;
 always @(posedge clk_50MHz)
 begin
   if(syncpulse || tx_mode == 1)
@@ -189,7 +226,7 @@ end
 
 
 //----------------------------------- fi_phm --------------------------------------------------------------------------------
-reg [15:0]   fi_phm;
+reg [31:0]   fi_phm;
 always @(posedge clk_50MHz)
 begin
         if (tp_mode == 0)
@@ -211,8 +248,65 @@ begin
     end
 //--------------------------------------------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------------------------------------------
-TR TR_Test
+TR_AUTO TR_AUTO_Test
+(
+  .clk                (clk_50MHz),
+  .data_valid_TR      (data_valid_TR), 
+  .tr_mode            (tr_mode), 
+  .rst                (rst),
+  
+  .x                  (x), 
+  .x_set              (x_set),
+  .dx1                (dx1), 
+  .dx2                (dx2),
+  .DZ_TR              (DZ_TR),
+
+  .L                  (L),
+  .F2                 (F2),
+  .F1                 (F1),
+  .k_TR               (k_TR)
+);
+
+TX TX_Test
+(
+  .clk                (clk_50MHz), 
+  .data_valid_TX      (data_valid_TX),
+  .tx_mode            (tx_mode), 
+  .rst                (rst), 
+
+  .i_fid              (i_fid),          
+  .i_set              (i_set),           
+  //.i_fid_TX           (i_fid_TX),
+  .syncpulse          (syncpulse),
+  .DZ_TX              (DZ_TX),
+  .d_i_gate2          (d_i_gate2),
+  
+  .L                  (L),
+  .F2                 (F2),
+  .F1                 (F1),
+  .k_TX               (k_TX) 
+);
+
+TP TP_Test
+(
+  .clk                (clk_50MHz), 
+  .tp_mode            (tp_mode), 
+  .data_valid_TP      (data_valid_TP),
+  .rst                (rst), 
+  
+  .fi_phm             (fi_phm),
+  .fi_set             (fi_set),
+  .detuning           (detuning),
+  .DZ_TP              (DZ_TP),
+  .d_fi_gate2         (d_fi_gate2),
+  
+  .L                  (L),
+  .F2                 (F2),
+  .F1                 (F1),
+  .k_TP               (k_TP)   
+);
+
+/*TR TR_Test
 (
   .clk                (clk_50MHz),
   .data_valid         (data_valid), 
@@ -230,40 +324,6 @@ TR TR_Test
   .k_TR               (k_TR) 
 );
 
-TX TX_Test
-(
-  .clk                (clk_50MHz), 
-  .tx_mode            (tx_mode), 
-  .rst                (rst), 
-
-  .i_fid              (i_fid),          
-  .i_set              (i_set),           
-  .i_fid_TX           (i_fid_TX),
-  .syncpulse          (syncpulse),
-  .DZ_TX              (DZ_TX),
-  .d_i_gate2          (d_i_gate2),
-  
-  .L                  (L_conn),
-  .F2                 (F2_conn),
-  .F1                 (F1_conn) 
-);
-
-TP TP_Test
-(
-  .clk                (clk_50MHz), 
-  .tp_mode            (tp_mode), 
-  .rst                (rst), 
-  
-  .fi_phm             (fi_phm),
-  .fi_set             (fi_set),
-  .detuning           (detuning),
-  .DZ_TP              (DZ_TP),
-  .d_fi_gate2         (d_fi_gate2),
-  
-  .L                  (L_conn),
-  .F2                 (F2_conn),
-  .F1                 (F1_conn)  
-);
 
 PULSE PULSE_test
 (
@@ -271,6 +331,6 @@ PULSE PULSE_test
   .rst                (rst), 
   .drv_pulse          (drv_pulse)
 );
-
+*/
 
 endmodule
