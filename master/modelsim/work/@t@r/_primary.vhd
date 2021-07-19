@@ -13,9 +13,9 @@ entity TR is
         rst             : in     vl_logic;
         dir_AUTO        : in     vl_logic;
         dir_MANUAL      : in     vl_logic;
-        cheak           : in     vl_logic;
+        auto            : in     vl_logic;
         enable_AUTO     : in     vl_logic;
-        pulse_enable    : in     vl_logic;
+        enable_MANUAL   : in     vl_logic;
         count_MANUAL    : in     vl_logic;
         period_AUTO     : in     vl_logic_vector;
         period_MANUAL   : in     vl_logic_vector
