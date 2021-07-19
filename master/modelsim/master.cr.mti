@@ -1,0 +1,50 @@
+D:/quartus/master/src/tr_manual/TR_MANUAL.v {1 {vlog -work work D:/quartus/master/src/tr_manual/TR_MANUAL.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module TR_MANUAL
+
+Top level modules:
+	TR_MANUAL
+
+} {} {}} D:/quartus/master/src/pulse/PULSE.v {1 {vlog -work work D:/quartus/master/src/pulse/PULSE.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module PULSE
+
+Top level modules:
+	PULSE
+
+} {} {}} D:/quartus/master/modelsim/Test.v {1 {vlog -work work D:/quartus/master/modelsim/Test.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module Test
+
+Top level modules:
+	Test
+
+} {} {}} D:/quartus/master/src/tp/TP.v {1 {vlog -work work D:/quartus/master/src/tp/TP.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module TP
+
+Top level modules:
+	TP
+
+} {} {}} D:/quartus/master/src/tx/TX.v {1 {vlog -work work D:/quartus/master/src/tx/TX.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module TX
+
+Top level modules:
+	TX
+
+} {} {}} D:/quartus/master/src/tr_auto/TR_AUTO.v {1 {vlog -work work D:/quartus/master/src/tr_auto/TR_AUTO.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module TR_AUTO
+
+Top level modules:
+	TR_AUTO
+
+} {} {}} D:/quartus/master/src/tr/TR.v {1 {vlog -work work D:/quartus/master/src/tr/TR.v
+Model Technology ModelSim ALTERA vlog 10.1d Compiler 2012.11 Nov  2 2012
+-- Compiling module TR
+
+Top level modules:
+	TR
+
+} {} {}}

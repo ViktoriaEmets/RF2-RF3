@@ -1,0 +1,165 @@
+m255
+K3
+13
+cModel Technology
+Z0 dD:\quartus\test\modelsim
+vPULSE
+Z1 !s100 @T1>d;F?c4lRe`;Wh6@`:0
+Z2 IZGC0Xi5D[@eUN1g^K`nC[3
+Z3 V0=[0UV_^2ZLm0]7M1<=CW1
+Z4 dD:\quartus\master\modelsim
+Z5 w1626339546
+Z6 8D:/quartus/master/src/pulse/PULSE.v
+Z7 FD:/quartus/master/src/pulse/PULSE.v
+L0 1
+Z8 OV;L;10.1d;51
+r1
+31
+Z9 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/pulse/PULSE.v|
+Z10 o-work work -O0
+Z11 n@p@u@l@s@e
+!i10b 1
+!s85 0
+Z12 !s108 1626342496.889000
+Z13 !s107 D:/quartus/master/src/pulse/PULSE.v|
+!s101 -O0
+vTest
+!i10b 1
+Z14 !s100 jQ:^YV:[7KJ^FEZl8H2WE2
+Z15 IlS`BXoeBNA>T<7E4PODA32
+Z16 VzFBSe;N;;:Kkcnk?Xi;@z2
+R4
+Z17 w1626062563
+Z18 8D:/quartus/master/modelsim/Test.v
+Z19 FD:/quartus/master/modelsim/Test.v
+L0 2
+R8
+r1
+!s85 0
+31
+!s108 1626342496.982000
+!s107 D:/quartus/master/modelsim/Test.v|
+Z20 !s90 -reportprogress|300|-work|work|D:/quartus/master/modelsim/Test.v|
+!s101 -O0
+R10
+Z21 n@test
+vTP
+Z22 !s100 :Ael@>B5n^JBf0@3SG5kP2
+Z23 I:XmGSTz;^8^jPe_8f^Mzb1
+Z24 VVQ2jP2SG[PNZYA18h_lTb0
+R4
+Z25 w1626342490
+Z26 8D:/quartus/master/src/tp/TP.v
+Z27 FD:/quartus/master/src/tp/TP.v
+L0 1
+R8
+r1
+31
+Z28 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/tp/TP.v|
+R10
+n@t@p
+Z29 !s108 1626342496.817000
+Z30 !s107 D:/quartus/master/src/tp/TP.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vTR
+Z31 !s100 6C3VcP5gG@JSEWRl?0eO63
+Z32 INc@X<le[2h[Z?OhFZjDZ^1
+Z33 VT^Uk0j[1M3<PzdPWhS<UV2
+R4
+Z34 w1626339172
+Z35 8D:/quartus/master/src/tr/TR.v
+Z36 FD:/quartus/master/src/tr/TR.v
+L0 1
+R8
+r1
+31
+Z37 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/tr/TR.v|
+R10
+n@t@r
+Z38 !s108 1626342496.621000
+Z39 !s107 D:/quartus/master/src/tr/TR.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vTR_AUTO
+Z40 !s100 >cM9>CLXJ`iIXUn[Y<`li1
+Z41 IFO=e_EdDTbJC4T5K2RUc>1
+Z42 VFGa>IWFj;3]WENQG=Gd4c2
+R4
+Z43 w1626341688
+Z44 8D:/quartus/master/src/tr_auto/TR_AUTO.v
+Z45 FD:/quartus/master/src/tr_auto/TR_AUTO.v
+L0 1
+R8
+r1
+31
+Z46 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/tr_auto/TR_AUTO.v|
+R10
+Z47 n@t@r_@a@u@t@o
+Z48 !s108 1626342496.437000
+Z49 !s107 D:/quartus/master/src/tr_auto/TR_AUTO.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vTR_MANUAL
+Z50 !s100 dK9IL`T8_8ePA?jgkB_6n1
+Z51 IE;JO`icEMdC9HN[_E=Z6i3
+Z52 VUeBFMmPf64662C8z_`J3_2
+R4
+Z53 w1626339433
+Z54 8D:/quartus/master/src/tr_manual/TR_MANUAL.v
+Z55 FD:/quartus/master/src/tr_manual/TR_MANUAL.v
+L0 1
+R8
+r1
+31
+Z56 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/tr_manual/TR_MANUAL.v|
+R10
+Z57 n@t@r_@m@a@n@u@a@l
+Z58 !s108 1626342496.541000
+Z59 !s107 D:/quartus/master/src/tr_manual/TR_MANUAL.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vTX
+Z60 !s100 ^h[<Zff0oHEm^W=lR0SK53
+Z61 Ia?=^j8E[LZVcGN5`AT@S=3
+Z62 VI36k<COdGCRl[8zLSMKV[3
+R4
+Z63 w1626342491
+Z64 8D:/quartus/master/src/tx/TX.v
+Z65 FD:/quartus/master/src/tx/TX.v
+L0 1
+R8
+r1
+31
+Z66 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/tx/TX.v|
+R10
+n@t@x
+Z67 !s108 1626342496.732000
+Z68 !s107 D:/quartus/master/src/tx/TX.v|
+!i10b 1
+!s85 0
+!s101 -O0
+vTX_TP
+Z69 IenYG>aXZ2O``MkE4=HdHk0
+Z70 Vaa3QdzooW8N2CnTHEAYFK3
+R4
+Z71 w1626327946
+Z72 8D:/quartus/master/src/tx_tp/TX_TP.v
+Z73 FD:/quartus/master/src/tx_tp/TX_TP.v
+L0 1
+R8
+r1
+31
+R10
+Z74 n@t@x_@t@p
+Z75 !s100 l6fzddXUbJWK0d093k5JI0
+Z76 !s108 1626327953.683000
+Z77 !s107 D:/quartus/master/src/tx_tp/TX_TP.v|
+Z78 !s90 -reportprogress|300|-work|work|D:/quartus/master/src/tx_tp/TX_TP.v|
+!i10b 1
+!s85 0
+!s101 -O0
