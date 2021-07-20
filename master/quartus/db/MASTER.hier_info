@@ -1,0 +1,10 @@
+|MASTER
+clk => ~NO_FANOUT~
+start <= <GND>
+stop <= <GND>
+start_N <= <GND>
+avto <= <GND>
+drv_pulse <= <GND>
+drv_dir <= <GND>
+
+

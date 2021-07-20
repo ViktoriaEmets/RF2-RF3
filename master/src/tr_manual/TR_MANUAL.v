@@ -3,7 +3,7 @@ module TR_MANUAL  // Режим ручной выстовки тюнеров
 parameter  WIDTH_MANUAL             = 16 
 )
 (
-    input reg                             start,
+    input                                 start,
                                           start_N,
                                           stop,
 

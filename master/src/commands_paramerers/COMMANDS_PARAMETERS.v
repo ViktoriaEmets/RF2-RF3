@@ -143,6 +143,7 @@ always @(*)
       start_N        = control_reg[2];
     end
 
+
 always @(*)
 begin
       mode_reg[0] = 1'b0;
