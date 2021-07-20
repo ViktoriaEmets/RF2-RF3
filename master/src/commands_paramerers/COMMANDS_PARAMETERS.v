@@ -1,4 +1,6 @@
-module COMMANDS_PARAMETERS
+module COMMANDS_PARAMETERS      // проверка, загрузка через терминал
+                                // проверка 
+                                // ляляля
 #(
      parameter WIDTH_C_P = 16
 )
