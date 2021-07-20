@@ -1,4 +1,6 @@
-module COMMANDS_PARAMETERS
+module COMMANDS_PARAMETERS      // проверка, загрузка через терминал
+                                // проверка 
+                                // ляляля
 #(
      parameter WIDTH_C_P = 16
 )
@@ -140,6 +142,7 @@ always @(*)
       start          = control_reg[1];
       start_N        = control_reg[2];
     end
+
 
 always @(*)
 begin
