@@ -16,7 +16,7 @@ module SETTINGS
     input wire [31:0]               writedata,
     output reg [31:0]               readdata,
     input wire                      write,
-    input wire                      read,
+    input wire                      read
 
   // ------------ для памяти -------------------------------------------------------
     //output reg [7:0] data_out,       вроде readdata
@@ -27,17 +27,20 @@ module SETTINGS
 ); 
     reg                             write_addr_err,
                                     point_comm,
-                                    start_table;
+                                    start_table,
+                                    tr,
+                                    tx,
+                                    tp;
 
     reg [WIDTH_SET-1:0]             set_reg;
 
     reg [2*WIDTH_SET-1:0]           x_point,
                                     i_point,
-                                    fi_point,
+                                    fi_point;
 
-                                    x_table,
+                                   /* x_table,
                                     i_table, 
-                                    fi_table;
+                                    fi_table;*/
 always @(posedge clk)
     begin
       if (rst)
@@ -145,9 +148,9 @@ begin
         end
     else 
         begin
-            x_set   = x_table;
-            i_set   = i_table;
-            fi_set  = fi_table;
+            x_set   = x_table[address];
+            i_set   = i_table[address];
+            fi_set  = fi_table[address];
 
         end    
 end
