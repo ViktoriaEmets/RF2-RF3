@@ -16,7 +16,7 @@
 -- PROGRAM "Quartus II 64-Bit"
 -- VERSION "Version 13.1.0 Build 162 10/23/2013 SJ Web Edition"
 
--- DATE "07/20/2021 10:53:45"
+-- DATE "07/22/2021 17:47:23"
 
 -- 
 -- Device: Altera EP4CE22F17C6 Package FBGA256
@@ -34,23 +34,23 @@ USE IEEE.STD_LOGIC_1164.ALL;
 ENTITY 	MASTER IS
     PORT (
 	clk : IN std_logic;
-	start : OUT std_logic;
-	stop : OUT std_logic;
-	start_N : OUT std_logic;
-	avto : OUT std_logic;
-	drv_pulse : OUT std_logic;
-	drv_dir : OUT std_logic
+	commands_parameters_0_conduit_comm_par_start : BUFFER std_logic;
+	commands_parameters_0_conduit_comm_par_stop : BUFFER std_logic;
+	commands_parameters_0_conduit_comm_par_start_N : BUFFER std_logic;
+	commands_parameters_0_conduit_comm_par_avto : BUFFER std_logic;
+	commands_parameters_0_conduit_comm_par_drv_pulse : BUFFER std_logic;
+	commands_parameters_0_conduit_comm_par_drv_dir : BUFFER std_logic
 	);
 END MASTER;
 
 -- Design Ports Information
 -- clk	=>  Location: PIN_D12,	 I/O Standard: 2.5 V,	 Current Strength: Default
--- start	=>  Location: PIN_C3,	 I/O Standard: 2.5 V,	 Current Strength: Default
--- stop	=>  Location: PIN_R13,	 I/O Standard: 2.5 V,	 Current Strength: Default
--- start_N	=>  Location: PIN_D1,	 I/O Standard: 2.5 V,	 Current Strength: Default
--- avto	=>  Location: PIN_J16,	 I/O Standard: 2.5 V,	 Current Strength: Default
--- drv_pulse	=>  Location: PIN_P8,	 I/O Standard: 2.5 V,	 Current Strength: Default
--- drv_dir	=>  Location: PIN_D3,	 I/O Standard: 2.5 V,	 Current Strength: Default
+-- commands_parameters_0_conduit_comm_par_start	=>  Location: PIN_C3,	 I/O Standard: 2.5 V,	 Current Strength: Default
+-- commands_parameters_0_conduit_comm_par_stop	=>  Location: PIN_R13,	 I/O Standard: 2.5 V,	 Current Strength: Default
+-- commands_parameters_0_conduit_comm_par_start_N	=>  Location: PIN_D1,	 I/O Standard: 2.5 V,	 Current Strength: Default
+-- commands_parameters_0_conduit_comm_par_avto	=>  Location: PIN_J16,	 I/O Standard: 2.5 V,	 Current Strength: Default
+-- commands_parameters_0_conduit_comm_par_drv_pulse	=>  Location: PIN_P8,	 I/O Standard: 2.5 V,	 Current Strength: Default
+-- commands_parameters_0_conduit_comm_par_drv_dir	=>  Location: PIN_D3,	 I/O Standard: 2.5 V,	 Current Strength: Default
 
 
 ARCHITECTURE structure OF MASTER IS
@@ -64,35 +64,35 @@ SIGNAL ww_devoe : std_logic;
 SIGNAL ww_devclrn : std_logic;
 SIGNAL ww_devpor : std_logic;
 SIGNAL ww_clk : std_logic;
-SIGNAL ww_start : std_logic;
-SIGNAL ww_stop : std_logic;
-SIGNAL ww_start_N : std_logic;
-SIGNAL ww_avto : std_logic;
-SIGNAL ww_drv_pulse : std_logic;
-SIGNAL ww_drv_dir : std_logic;
+SIGNAL ww_commands_parameters_0_conduit_comm_par_start : std_logic;
+SIGNAL ww_commands_parameters_0_conduit_comm_par_stop : std_logic;
+SIGNAL ww_commands_parameters_0_conduit_comm_par_start_N : std_logic;
+SIGNAL ww_commands_parameters_0_conduit_comm_par_avto : std_logic;
+SIGNAL ww_commands_parameters_0_conduit_comm_par_drv_pulse : std_logic;
+SIGNAL ww_commands_parameters_0_conduit_comm_par_drv_dir : std_logic;
 SIGNAL \clk~input_o\ : std_logic;
-SIGNAL \start~output_o\ : std_logic;
-SIGNAL \stop~output_o\ : std_logic;
-SIGNAL \start_N~output_o\ : std_logic;
-SIGNAL \avto~output_o\ : std_logic;
-SIGNAL \drv_pulse~output_o\ : std_logic;
-SIGNAL \drv_dir~output_o\ : std_logic;
+SIGNAL \commands_parameters_0_conduit_comm_par_start~output_o\ : std_logic;
+SIGNAL \commands_parameters_0_conduit_comm_par_stop~output_o\ : std_logic;
+SIGNAL \commands_parameters_0_conduit_comm_par_start_N~output_o\ : std_logic;
+SIGNAL \commands_parameters_0_conduit_comm_par_avto~output_o\ : std_logic;
+SIGNAL \commands_parameters_0_conduit_comm_par_drv_pulse~output_o\ : std_logic;
+SIGNAL \commands_parameters_0_conduit_comm_par_drv_dir~output_o\ : std_logic;
 
 BEGIN
 
 ww_clk <= clk;
-start <= ww_start;
-stop <= ww_stop;
-start_N <= ww_start_N;
-avto <= ww_avto;
-drv_pulse <= ww_drv_pulse;
-drv_dir <= ww_drv_dir;
+commands_parameters_0_conduit_comm_par_start <= ww_commands_parameters_0_conduit_comm_par_start;
+commands_parameters_0_conduit_comm_par_stop <= ww_commands_parameters_0_conduit_comm_par_stop;
+commands_parameters_0_conduit_comm_par_start_N <= ww_commands_parameters_0_conduit_comm_par_start_N;
+commands_parameters_0_conduit_comm_par_avto <= ww_commands_parameters_0_conduit_comm_par_avto;
+commands_parameters_0_conduit_comm_par_drv_pulse <= ww_commands_parameters_0_conduit_comm_par_drv_pulse;
+commands_parameters_0_conduit_comm_par_drv_dir <= ww_commands_parameters_0_conduit_comm_par_drv_dir;
 ww_devoe <= devoe;
 ww_devclrn <= devclrn;
 ww_devpor <= devpor;
 
 -- Location: IOOBUF_X1_Y34_N2
-\start~output\ : cycloneive_io_obuf
+\commands_parameters_0_conduit_comm_par_start~output\ : cycloneive_io_obuf
 -- pragma translate_off
 GENERIC MAP (
 	bus_hold => "false",
@@ -101,10 +101,10 @@ GENERIC MAP (
 PORT MAP (
 	i => GND,
 	devoe => ww_devoe,
-	o => \start~output_o\);
+	o => \commands_parameters_0_conduit_comm_par_start~output_o\);
 
 -- Location: IOOBUF_X40_Y0_N23
-\stop~output\ : cycloneive_io_obuf
+\commands_parameters_0_conduit_comm_par_stop~output\ : cycloneive_io_obuf
 -- pragma translate_off
 GENERIC MAP (
 	bus_hold => "false",
@@ -113,10 +113,10 @@ GENERIC MAP (
 PORT MAP (
 	i => GND,
 	devoe => ww_devoe,
-	o => \stop~output_o\);
+	o => \commands_parameters_0_conduit_comm_par_stop~output_o\);
 
 -- Location: IOOBUF_X0_Y25_N9
-\start_N~output\ : cycloneive_io_obuf
+\commands_parameters_0_conduit_comm_par_start_N~output\ : cycloneive_io_obuf
 -- pragma translate_off
 GENERIC MAP (
 	bus_hold => "false",
@@ -125,10 +125,10 @@ GENERIC MAP (
 PORT MAP (
 	i => GND,
 	devoe => ww_devoe,
-	o => \start_N~output_o\);
+	o => \commands_parameters_0_conduit_comm_par_start_N~output_o\);
 
 -- Location: IOOBUF_X53_Y14_N9
-\avto~output\ : cycloneive_io_obuf
+\commands_parameters_0_conduit_comm_par_avto~output\ : cycloneive_io_obuf
 -- pragma translate_off
 GENERIC MAP (
 	bus_hold => "false",
@@ -137,10 +137,10 @@ GENERIC MAP (
 PORT MAP (
 	i => GND,
 	devoe => ww_devoe,
-	o => \avto~output_o\);
+	o => \commands_parameters_0_conduit_comm_par_avto~output_o\);
 
 -- Location: IOOBUF_X25_Y0_N16
-\drv_pulse~output\ : cycloneive_io_obuf
+\commands_parameters_0_conduit_comm_par_drv_pulse~output\ : cycloneive_io_obuf
 -- pragma translate_off
 GENERIC MAP (
 	bus_hold => "false",
@@ -149,10 +149,10 @@ GENERIC MAP (
 PORT MAP (
 	i => GND,
 	devoe => ww_devoe,
-	o => \drv_pulse~output_o\);
+	o => \commands_parameters_0_conduit_comm_par_drv_pulse~output_o\);
 
 -- Location: IOOBUF_X1_Y34_N9
-\drv_dir~output\ : cycloneive_io_obuf
+\commands_parameters_0_conduit_comm_par_drv_dir~output\ : cycloneive_io_obuf
 -- pragma translate_off
 GENERIC MAP (
 	bus_hold => "false",
@@ -161,7 +161,7 @@ GENERIC MAP (
 PORT MAP (
 	i => GND,
 	devoe => ww_devoe,
-	o => \drv_dir~output_o\);
+	o => \commands_parameters_0_conduit_comm_par_drv_dir~output_o\);
 
 -- Location: IOIBUF_X51_Y34_N22
 \clk~input\ : cycloneive_io_ibuf
@@ -174,17 +174,17 @@ PORT MAP (
 	i => ww_clk,
 	o => \clk~input_o\);
 
-ww_start <= \start~output_o\;
+ww_commands_parameters_0_conduit_comm_par_start <= \commands_parameters_0_conduit_comm_par_start~output_o\;
 
-ww_stop <= \stop~output_o\;
+ww_commands_parameters_0_conduit_comm_par_stop <= \commands_parameters_0_conduit_comm_par_stop~output_o\;
 
-ww_start_N <= \start_N~output_o\;
+ww_commands_parameters_0_conduit_comm_par_start_N <= \commands_parameters_0_conduit_comm_par_start_N~output_o\;
 
-ww_avto <= \avto~output_o\;
+ww_commands_parameters_0_conduit_comm_par_avto <= \commands_parameters_0_conduit_comm_par_avto~output_o\;
 
-ww_drv_pulse <= \drv_pulse~output_o\;
+ww_commands_parameters_0_conduit_comm_par_drv_pulse <= \commands_parameters_0_conduit_comm_par_drv_pulse~output_o\;
 
-ww_drv_dir <= \drv_dir~output_o\;
+ww_commands_parameters_0_conduit_comm_par_drv_dir <= \commands_parameters_0_conduit_comm_par_drv_dir~output_o\;
 END structure;
 
 

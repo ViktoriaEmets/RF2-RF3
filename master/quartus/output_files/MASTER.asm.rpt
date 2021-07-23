@@ -1,5 +1,5 @@
 Assembler report for MASTER
-Tue Jul 20 10:53:40 2021
+Fri Jul 23 10:19:51 2021
 Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
 
 
@@ -9,9 +9,10 @@ Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
   1. Legal Notice
   2. Assembler Summary
   3. Assembler Settings
-  4. Assembler Generated Files
-  5. Assembler Device Options: D:/quartus/git/RF2-RF3/master/quartus/output_files/MASTER.sof
-  6. Assembler Messages
+  4. Assembler Encrypted IP Cores Summary
+  5. Assembler Generated Files
+  6. Assembler Device Options: D:/quartus/master/quartus/output_files/MASTER.sof
+  7. Assembler Messages
 
 
 
@@ -37,7 +38,7 @@ applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Tue Jul 20 10:53:40 2021 ;
+; Assembler Status      ; Successful - Fri Jul 23 10:19:51 2021 ;
 ; Revision Name         ; MASTER                                ;
 ; Top-level Entity Name ; MASTER                                ;
 ; Family                ; Cyclone IV E                          ;
@@ -77,24 +78,34 @@ applicable agreement for further details.
 +-----------------------------------------------------------------------------+----------+---------------+
 
 
-+---------------------------------------------------------------+
-; Assembler Generated Files                                     ;
-+---------------------------------------------------------------+
-; File Name                                                     ;
-+---------------------------------------------------------------+
-; D:/quartus/git/RF2-RF3/master/quartus/output_files/MASTER.sof ;
-+---------------------------------------------------------------+
++------------------------------------------------+
+; Assembler Encrypted IP Cores Summary           ;
++--------+------------------------+--------------+
+; Vendor ; IP Core Name           ; License Type ;
++--------+------------------------+--------------+
+; Altera ; Signal Tap (6AF7 BCE1) ; Licensed     ;
+; Altera ; Signal Tap (6AF7 BCEC) ; Licensed     ;
++--------+------------------------+--------------+
 
 
-+-----------------------------------------------------------------------------------------+
-; Assembler Device Options: D:/quartus/git/RF2-RF3/master/quartus/output_files/MASTER.sof ;
-+----------------+------------------------------------------------------------------------+
-; Option         ; Setting                                                                ;
-+----------------+------------------------------------------------------------------------+
-; Device         ; EP4CE22F17C6                                                           ;
-; JTAG usercode  ; 0x00134A54                                                             ;
-; Checksum       ; 0x00134A54                                                             ;
-+----------------+------------------------------------------------------------------------+
++---------------------------------------------------+
+; Assembler Generated Files                         ;
++---------------------------------------------------+
+; File Name                                         ;
++---------------------------------------------------+
+; D:/quartus/master/quartus/output_files/MASTER.sof ;
++---------------------------------------------------+
+
+
++-----------------------------------------------------------------------------+
+; Assembler Device Options: D:/quartus/master/quartus/output_files/MASTER.sof ;
++----------------+------------------------------------------------------------+
+; Option         ; Setting                                                    ;
++----------------+------------------------------------------------------------+
+; Device         ; EP4CE22F17C6                                               ;
+; JTAG usercode  ; 0x00156291                                                 ;
+; Checksum       ; 0x00156291                                                 ;
++----------------+------------------------------------------------------------+
 
 
 +--------------------+
@@ -103,13 +114,13 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Assembler
     Info: Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
-    Info: Processing started: Tue Jul 20 10:53:38 2021
+    Info: Processing started: Fri Jul 23 10:19:49 2021
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off MASTER -c MASTER
 Info (115031): Writing out detailed assembly data for power analysis
 Info (115030): Assembler is generating device programming files
 Info: Quartus II 64-Bit Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 4608 megabytes
-    Info: Processing ended: Tue Jul 20 10:53:40 2021
+    Info: Peak virtual memory: 4602 megabytes
+    Info: Processing ended: Fri Jul 23 10:19:51 2021
     Info: Elapsed time: 00:00:02
     Info: Total CPU time (on all processors): 00:00:01
 
