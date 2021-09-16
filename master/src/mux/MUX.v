@@ -126,6 +126,43 @@ always @(*)
  */   
 //-----------------------------------------------------------------------------------------     
 
+COMMANDS_PARAMETERS COMMANDS_PARAMETERS_insts_MODE 
+(
+    .clk            (clk),
+    
+    .tr             (tr),
+    .tx             (tx),
+    .tp             (tp)
+);
+
+TR TR_insts
+(
+    .clk            (clk),
+
+    .period_TR      (period_TR),
+    .drv_en_TR      (drv_en_TR),
+    .dir_TR         (dir_TR),
+    .counter_en_TR  (counter_en_TR)
+);
+
+TX TX_insts
+(
+    .clk            (clk),
+
+    .period_TX      (period_TX),
+    .drv_en_TX      (drv_en_TX),
+    .dir_TX         (dir_TX)
+);
+
+TP TP_insts
+(
+    .clk            (clk),
+
+    .period_TP      (period_TP),
+    .drv_en_TP      (drv_en_TP),
+    .dir_TP         (dir_TP)
+);
+
 always @(*)
     begin
       if(rst)
