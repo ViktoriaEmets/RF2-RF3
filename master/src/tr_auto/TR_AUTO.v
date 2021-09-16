@@ -15,7 +15,7 @@ input wire          		   		clk,            // 50 MHz
                     		   		tr_mode, 		// enable signal, outsignal
  
 input [WIDTH_IN-1:0]    			x_set,          // TABLE
-input [WIDTH_AUTO-1:0]  			x,              // ADC
+input [2*WIDTH_AUTO-1:0]  			x,              // ADC
           					   		dx1, 
 							   		dx2,  
           					   		F1,
